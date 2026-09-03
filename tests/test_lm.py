@@ -65,6 +65,16 @@ class RedirectHandler(BaseHTTPRequestHandler):
         pass
 
 
+class OversizedHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        self.send_response(200)
+        self.send_header("Content-Length", str(1024 * 1024 + 1))
+        self.end_headers()
+
+    def log_message(self, *args):
+        pass
+
+
 @pytest.fixture
 def local_server():
     Handler.requests = []
@@ -127,10 +137,10 @@ def test_redirects_are_rejected():
 
 
 def test_client_serializes_concurrent_calls(local_server):
-    client = LocalModelClient(local_server, timeout=2)
+    clients = [LocalModelClient(local_server, timeout=2) for _ in range(3)]
     threads = [
         threading.Thread(target=client.complete, args=(f"request {i}",))
-        for i in range(3)
+        for i, client in enumerate(clients)
     ]
     for thread in threads:
         thread.start()
@@ -139,3 +149,19 @@ def test_client_serializes_concurrent_calls(local_server):
 
     assert len(Handler.requests) == 3
     assert Handler.max_active == 1
+
+
+def test_oversized_response_is_rejected():
+    server = ThreadingHTTPServer(("127.0.0.1", 0), OversizedHandler)
+    thread = threading.Thread(target=server.serve_forever)
+    thread.start()
+    try:
+        client = LocalModelClient(
+            f"http://127.0.0.1:{server.server_port}/v1", timeout=2
+        )
+        with pytest.raises(RuntimeError, match="exceeds 1 MiB"):
+            client.complete("same event?")
+    finally:
+        server.shutdown()
+        thread.join()
+        server.server_close()

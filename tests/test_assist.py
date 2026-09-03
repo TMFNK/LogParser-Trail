@@ -6,6 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -106,6 +108,52 @@ def test_candidates_without_three_examples_are_not_sent():
     assert select_candidates(records, rows) == []
 
 
+def test_candidate_selection_rejects_mismatched_artifacts():
+    records = [
+        {
+            "line": 1,
+            "cluster": "T1",
+            "decision": "new_cluster",
+            "similarity": 0.0,
+            "template": "event one",
+        }
+    ]
+
+    with pytest.raises(ValueError, match="cluster mismatch"):
+        select_candidates(records, [row(1, "T2", "event one", "event one")])
+    with pytest.raises(ValueError, match="LineId mismatch"):
+        select_candidates(
+            records,
+            [
+                row(1, "T1", "event one", "event one"),
+                row(2, "T1", "event one", "event one"),
+            ],
+        )
+    with pytest.raises(ValueError, match="final templates"):
+        select_candidates(records, [row(1, "T1", "event <*>", "event one")])
+
+
+def test_candidate_limit_stops_dense_near_duplicate_set():
+    records = []
+    rows = []
+    for i, word in enumerate(["a", "b", "c", "d"], start=1):
+        cid = f"T{i}"
+        template = f"event {word}"
+        records.append(
+            {
+                "line": i,
+                "cluster": cid,
+                "decision": "new_cluster",
+                "similarity": 0.0,
+                "template": template,
+            }
+        )
+        rows.append(row(i, cid, template, template))
+
+    with pytest.raises(ValueError, match="candidate limit exceeded"):
+        select_candidates(records, rows, max_candidates=3)
+
+
 def test_prompt_and_response_contract():
     candidate = Candidate(
         kind="near_duplicate",
@@ -125,6 +173,32 @@ def test_prompt_and_response_contract():
     assert parse_same_or_two("<think>SAME") is None
     assert parse_same_or_two("SAME or TWO") is None
     assert decide(candidate, "SAME") == ("accept", "merge", "model said SAME")
+
+    low = Candidate(
+        kind="low_confidence",
+        cluster_ids=("T1",),
+        cited_audit_lines=(2, 1, 3),
+        examples=("target", "peer one", "peer two"),
+        templates=("event <*>",),
+        similarity=0.5,
+        target_line=2,
+    )
+    assert "Is example 1" in build_prompt(low)
+
+    unequal = Candidate(
+        kind="near_duplicate",
+        cluster_ids=("T1", "T2"),
+        cited_audit_lines=(1, 2, 3),
+        examples=("event a", "event b", "event x b"),
+        templates=("event <*>", "event <*> <*>"),
+        similarity=None,
+        target_line=None,
+    )
+    assert decide(unequal, "SAME") == (
+        "reject",
+        "none",
+        "unequal-length merge is not materialized",
+    )
 
 
 def test_review_contains_request_response_identity_citations_and_digests():
@@ -238,6 +312,37 @@ def test_apply_decisions_handles_overlapping_merges():
 
     assert {item["EventId"] for item in assisted} == {"T1"}
     assert {item["EventTemplate"] for item in assisted} == {"event <*>"}
+
+
+def test_apply_decisions_rejects_conflicted_merge_component():
+    source = [
+        row(1, "T1", "event one", "event one"),
+        row(2, "T2", "event two", "event two"),
+        row(3, "T3", "event three", "event three"),
+    ]
+    reviews = [
+        {"change": "merge", "cluster_ids": ["T1", "T2"]},
+        {"change": "merge", "cluster_ids": ["T2", "T3"]},
+        {
+            "kind": "near_duplicate",
+            "change": "none",
+            "cluster_ids": ["T1", "T3"],
+            "response": {"parsed": "TWO"},
+        },
+    ]
+
+    with pytest.raises(ValueError, match="conflicting SAME/TWO"):
+        apply_decisions(source, reviews)
+
+
+def test_apply_decisions_rejects_unequal_length_merge():
+    source = [
+        row(1, "T1", "event one", "event one"),
+        row(2, "T2", "event one extra", "event one extra"),
+    ]
+
+    with pytest.raises(ValueError, match="unequal-length"):
+        apply_decisions(source, [{"change": "merge", "cluster_ids": ["T1", "T2"]}])
 
 
 def test_apply_decisions_accepts_empty_parse():

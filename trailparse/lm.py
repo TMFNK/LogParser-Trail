@@ -5,14 +5,27 @@
 from __future__ import annotations
 
 import json
+import os
 import threading
+import time
+from contextlib import contextmanager
 from http.client import HTTPConnection
 from ipaddress import ip_address
+from pathlib import Path
+from tempfile import gettempdir
 from urllib.parse import urlparse
+
+try:
+    from fcntl import LOCK_EX, LOCK_UN, flock
+except ImportError:  # Windows still gets the process-wide thread lock.
+    LOCK_EX = LOCK_UN = flock = None
 
 PROMPT_VERSION = "trail-lm-v1"
 DEFAULT_BASE_URL = "http://127.0.0.1:8090/v1"
 DEFAULT_MODEL = "qwen3.8-2b-q6k"
+MAX_RESPONSE_BYTES = 1024 * 1024
+_REQUEST_LOCK = threading.Lock()
+_LOCK_PATH = Path(gettempdir()) / f"logparser-trail-lm-{os.getuid()}.lock"
 
 
 class LocalOnlyError(ValueError):
@@ -34,6 +47,46 @@ def require_loopback_url(url: str) -> None:
         raise LocalOnlyError(f"destination is not loopback: {host}")
 
 
+@contextmanager
+def _request_lock():
+    with _REQUEST_LOCK:
+        if flock is None:
+            yield
+            return
+        flags = os.O_CREAT | os.O_RDWR | os.O_CLOEXEC
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(_LOCK_PATH, flags, 0o600)
+        try:
+            flock(fd, LOCK_EX)
+            yield
+        finally:
+            flock(fd, LOCK_UN)
+            os.close(fd)
+
+
+def _read_response(response, connection, timeout: float) -> bytes:
+    declared = response.getheader("Content-Length")
+    if declared is not None and int(declared) > MAX_RESPONSE_BYTES:
+        raise RuntimeError("local model response exceeds 1 MiB")
+    deadline = time.monotonic() + timeout
+    chunks = []
+    total = 0
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("local model response exceeded overall timeout")
+        if connection.sock is not None:
+            connection.sock.settimeout(remaining)
+        chunk = response.read(min(65536, MAX_RESPONSE_BYTES + 1 - total))
+        if not chunk:
+            return b"".join(chunks)
+        chunks.append(chunk)
+        total += len(chunk)
+        if total > MAX_RESPONSE_BYTES:
+            raise RuntimeError("local model response exceeds 1 MiB")
+
+
 class LocalModelClient:
     """Serialized chat completions against a local OpenAI-compatible server."""
 
@@ -44,13 +97,14 @@ class LocalModelClient:
         timeout: float = 120.0,
     ) -> None:
         require_loopback_url(base_url)
+        if timeout <= 0:
+            raise ValueError("timeout must be positive")
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout = timeout
-        self._lock = threading.Lock()
 
     def complete(self, prompt: str) -> dict:
-        with self._lock:
+        with _request_lock():
             return self._complete(prompt)
 
     def _complete(self, prompt: str) -> dict:
@@ -85,7 +139,7 @@ class LocalModelClient:
                     f"redirects are not allowed ({response.status} -> "
                     f"{response.getheader('Location')})"
                 )
-            response_body = response.read()
+            response_body = _read_response(response, connection, self.timeout)
         finally:
             connection.close()
         if not 200 <= response.status < 300:

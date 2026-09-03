@@ -59,19 +59,26 @@ deterministic parser output.
 The optional assist joins audit `line` to structured CSV `LineId`. It selects
 matched decisions below `0.7` similarity and pairs of final cluster templates
 whose token-level Levenshtein edit distance is one. A candidate is sent only
-when three distinct cited example lines are available.
+when three distinct cited example lines are available. Before selection, the
+reader requires identical line sets, matching cluster ids, and matching final
+templates in the paired artifacts.
 
 Prompt version `trail-lm-v1` asks for exactly `SAME` or `TWO`. For a
-low-confidence join, `TWO` accepts splitting the cited target line. For a
-near-duplicate pair, `SAME` accepts merging the clusters. Any absent,
-conflicting, or otherwise unparseable answer is rejected. Accepted changes
-are materialized only in a separate `*_lm.csv`.
+low-confidence join, example 1 is identified as the target and `TWO` accepts
+splitting it. For an equal-length near-duplicate pair, `SAME` accepts merging
+the clusters. Unequal-length merges and components containing an explicit
+`TWO` conflict are not materialized. Any absent, conflicting, or otherwise
+unparseable answer is rejected. Accepted changes are materialized only in a
+separate `*_lm.csv`.
 
 The append-only review schema is `lm-review-v1`. Every record stores source
 SHA-256 digests, cited audit lines, examples, templates, request payload,
 prompt version, model identity, raw and parsed response, decision, change,
 and reason. Model traffic uses direct HTTP to literal `127.0.0.1`; proxies,
 redirects, hostnames, TLS endpoints, and concurrent requests are disallowed.
+A shared lock serializes calls across client instances and POSIX processes,
+responses are capped at 1 MiB, and candidate review aborts above 100 items
+unless explicitly raised.
 
 ## Known limits
 

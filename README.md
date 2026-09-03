@@ -38,7 +38,8 @@ LogParser-Trail/
 │   ├── metrics.py          # GA/PA/FGA/FTA (LogHub-2.0 formulas, Apache-2.0)
 │   ├── io.py               # LogHub-shaped CSV readers/writers
 │   ├── assist.py           # candidate selection + review materialization
-│   └── lm.py               # loopback-only OpenAI-compatible client
+│   ├── lm.py               # loopback-only OpenAI-compatible client
+│   └── cli.py              # installed trail-lm-assist command
 ├── examples/               # committed 60-line labeled sample (8 templates)
 ├── scripts/
 │   ├── make_sample.py      # seeded sample generator (seed 7)
@@ -73,7 +74,7 @@ committed public sample outputs from a different input unless
 Start an OpenAI-compatible server bound to `127.0.0.1`, then run:
 
 ```bash
-uv run python scripts/lm_assist.py \
+uv run trail-lm-assist \
   --csv results/parsed_sample.csv \
   --audit results/audit.jsonl \
   --review results/raw/sample.lm-review.jsonl \
@@ -84,7 +85,10 @@ The default endpoint is `http://127.0.0.1:8090/v1` and the default model
 alias is `qwen3.8-2b-q6k`; override them with `--base-url` and `--model`.
 Only the literal `127.0.0.1` is accepted. The client bypasses environment
 proxies, rejects redirects, and sends requests one at a time. Use `--dry-run`
-to inspect candidates without contacting a model or writing outputs.
+to inspect candidates without contacting a model or writing outputs. The
+command aborts above 100 candidates unless `--max-candidates` is explicit,
+and refuses to replace an existing `*_lm.csv` unless `--force` is passed.
+`scripts/lm_assist.py` remains as a source-checkout compatibility wrapper.
 
 ## Scores
 

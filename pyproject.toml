@@ -9,6 +9,9 @@ dependencies = [
     "pyyaml>=6.0.0",
 ]
 
+[project.scripts]
+trail-lm-assist = "trailparse.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",

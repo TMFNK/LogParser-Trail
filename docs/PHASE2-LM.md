@@ -29,20 +29,31 @@ human or a threshold accepts them. Nothing parses without a trail.
 5. If accepted decisions are applied, write a new assisted CSV. Do not
    mutate the deterministic CSV or parse audit.
 
-`scripts/lm_assist.py` implements this loop. A reply is accepted only when it
-contains one unambiguous `SAME` or `TWO` decision after any Qwen `<think>`
-block is removed. `TWO` accepts a low-confidence split; `SAME` accepts a
-near-duplicate merge. Other replies are rejected and still recorded. A
-failed request is recorded as a rejection before the CLI stops.
+The installed `trail-lm-assist` command implements this loop
+(`scripts/lm_assist.py` is a compatibility wrapper). It validates matching
+line sets, cluster ids, and final templates before review. A reply is accepted
+only when it contains one unambiguous `SAME` or `TWO` decision after any Qwen
+`<think>` block is removed. For low-confidence joins, example 1 is explicitly
+the target line. `TWO` accepts that split; `SAME` accepts an equal-length
+near-duplicate merge. Unequal-length merges and conflicted merge components
+are not materialized. Other replies are rejected and still recorded. A failed
+request is recorded as a rejection before the CLI stops.
 
 The client uses Python's direct `HTTPConnection` to the literal `127.0.0.1`.
 It does not read proxy environment variables, does not resolve hostnames, and
 does not follow redirects. Calls are serialized with one in-flight request.
+The lock is shared across client instances and, on POSIX, processes.
+Responses are limited to 1 MiB and the configured timeout is an overall read
+deadline.
 
 Each review record uses schema `lm-review-v1` and contains the candidate kind,
 cluster ids, cited audit lines, examples, templates, source-file SHA-256
 digests, prompt version, exact request, model identity, raw response, parsed
 proposal, decision, change, and reason.
+
+The command aborts above 100 candidates by default; raising
+`--max-candidates` is explicit. Existing assisted CSVs are preserved unless
+`--force` is passed. Review JSONL always remains append-only.
 
 ## Model
 
