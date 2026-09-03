@@ -44,7 +44,8 @@ def atomic_text_writer(
             f.flush()
             os.fsync(f.fileno())
         os.replace(temp_name, path)
-    except BaseException:
+    except BaseException:  # unslop-ignore: temp cleanup must run on any
+        # failure, then re-raise; narrowing this would leak temp files.
         try:
             os.unlink(temp_name)
         except FileNotFoundError:
