@@ -22,7 +22,9 @@ if [ -f ../LogParser-Dataset/dataset/SecOps_2k.log ]; then
   echo "tight:"; uv run python scripts/score.py \
     --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured.csv \
     --parsed results/raw/secops_parsed.csv \
-    --label "SecOps-2k tight (25)" --append-md results/baseline.md
+    --label "SecOps-2k tight (25)" --append-md results/baseline.md \
+    --out-json results/raw/trail_secops_tight.json
+  uv run python scripts/verify_secops.py
   echo "loose:"; uv run python scripts/score.py \
     --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured_loose.csv \
     --parsed results/raw/secops_parsed.csv \

@@ -5,8 +5,13 @@
 from __future__ import annotations
 
 import csv
+import os
 import re
+import tempfile
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
+from typing import TextIO
 
 COLUMNS = ["LineId", "Content", "EventId", "EventTemplate", "ParameterList"]
 
@@ -27,13 +32,33 @@ def read_log(path: Path) -> list[str]:
     return path.read_text().splitlines()
 
 
+@contextmanager
+def atomic_text_writer(
+    path: Path, *, newline: str | None = None
+) -> Iterator[TextIO]:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline=newline) as f:
+            yield f
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temp_name, path)
+    except BaseException:
+        try:
+            os.unlink(temp_name)
+        except FileNotFoundError:
+            pass
+        raise
+
+
 def write_structured(rows: list[dict], path: Path) -> None:
-    with open(path, "w", newline="") as f:
+    with atomic_text_writer(path, newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
 
 
 def read_structured(path: Path) -> list[dict]:
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return list(csv.DictReader(f))

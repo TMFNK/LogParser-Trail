@@ -38,13 +38,13 @@ def test_jsonl_roundtrip(tmp_path):
 
 def test_summary_counts():
     miner = Miner()
-    for i, raw in enumerate(["a b c", "a b d", "x y q"], start=1):
+    lines = ["a b c d", "a b c d", "a b y z", "x y q"]
+    for i, raw in enumerate(lines, start=1):
         miner.feed(i, raw)
     summary = audit_mod.summarize(miner.decisions)
     assert summary == {
-        "n_lines": 3,
+        "n_lines": 4,
         "n_new_clusters": 2,
-        "n_matched": 1,
-        "min_match_similarity": summary["min_match_similarity"],
+        "n_matched": 2,
+        "min_match_similarity": 0.5,
     }
-    assert summary["min_match_similarity"] is not None

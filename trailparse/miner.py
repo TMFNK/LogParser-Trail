@@ -84,17 +84,14 @@ class Miner:
         return out
 
     def _candidates(self, tokens: list[str]) -> list[Cluster]:
-        n_anchor = self.anchor_tokens
-        if len(tokens) < n_anchor:
-            return []
-        anchor = tokens[:n_anchor]
-        return [
-            c
-            for c in self.clusters
-            if abs(len(c.template) - len(tokens)) <= self.length_slack
-            and len(c.template) >= n_anchor
-            and c.template[:n_anchor] == anchor
-        ]
+        candidates = []
+        for cluster in self.clusters:
+            if abs(len(cluster.template) - len(tokens)) > self.length_slack:
+                continue
+            n_anchor = min(self.anchor_tokens, len(tokens), len(cluster.template))
+            if cluster.template[:n_anchor] == tokens[:n_anchor]:
+                candidates.append(cluster)
+        return candidates
 
     def feed(self, line_id: int, raw: str) -> Cluster:
         tokens = self._mask(raw.split())
@@ -130,7 +127,7 @@ class Miner:
         return " ".join(cluster.template)
 
     def params_for(self, raw: str, cluster: Cluster) -> list[str]:
-        tokens = self._mask(raw.split())
+        tokens = raw.split()
         return [
             tok
             for tok, tmpl in zip(tokens, cluster.template)

@@ -66,6 +66,12 @@ def test_wildcard_positions_match_later_lines():
     assert len(miner.clusters) == 1
 
 
+def test_repeated_short_messages_share_a_cluster():
+    miner = run(["heartbeat", "heartbeat"])
+    assert len(miner.clusters) == 1
+    assert miner.clusters[0].count == 2
+
+
 def test_length_slack_controls_candidate_matching():
     lines = [
         "event start one two",
@@ -99,6 +105,14 @@ def test_src_mask_enables_first_ufw_merge():
 
     assert len(without_mask.clusters) == 2
     assert len(with_mask.clusters) == 1
+
+
+def test_token_masks_preserve_parameter_values():
+    miner = Miner(regex=[r"SRC=\S+"])
+    cluster = miner.feed(1, "event start SRC=203.0.113.7")
+    assert miner.params_for("event start SRC=203.0.113.7", cluster) == [
+        "SRC=203.0.113.7"
+    ]
 
 
 def test_token_masks_require_a_full_match():

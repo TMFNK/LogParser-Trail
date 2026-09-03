@@ -55,8 +55,16 @@ LogParser-Trail/
 
 `results/audit.jsonl` holds one record per line: line number, cluster,
 `matched` or `new_cluster`, similarity, and the template after the
-decision. That file is the product as much as the templates are. Phase
-2 reads it instead of re-reading the logs.
+decision. That immutable file is the product as much as the templates
+are. Phase 2 selects candidates from it, gets example text from the
+paired structured CSV, and records model review in a separate ignored
+`*.lm-review.jsonl`.
+
+Audit records can contain values from the source log, including secrets in
+the first line of a cluster. Keep real-log outputs under `results/raw/` or
+another private, ignored directory. The parser refuses to replace the
+committed public sample outputs from a different input unless
+`--allow-public-output` is explicit.
 
 ## Scores
 
@@ -76,6 +84,14 @@ uv run python scripts/score.py --truth examples/sample_structured.csv \
   --out-json results/raw/sample_scores.json
 uv run python scripts/verify_golden.py
 uv run pytest -q
+```
+
+For private logs, choose ignored outputs:
+
+```bash
+uv run python scripts/parse.py --input /path/to/private.log \
+  --out-csv results/raw/private.csv \
+  --out-audit results/raw/private.audit.jsonl
 ```
 
 ## License

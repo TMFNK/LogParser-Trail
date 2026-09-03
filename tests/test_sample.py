@@ -13,6 +13,7 @@ from trailparse.miner import Miner  # noqa: E402
 
 LOG = ROOT / "examples" / "sample.log"
 TRUTH = ROOT / "examples" / "sample_structured.csv"
+PARSED = ROOT / "results" / "parsed_sample.csv"
 
 
 def test_sample_files_sized():
@@ -37,3 +38,17 @@ def test_truth_params_match_templates():
     for r in io_mod.read_structured(TRUTH):
         params = ast.literal_eval(r["ParameterList"])
         assert len(params) == r["EventTemplate"].count("<*>"), r["LineId"]
+
+
+def test_parsed_sample_preserves_parameter_values():
+    import ast
+
+    truth = {
+        row["LineId"]: ast.literal_eval(row["ParameterList"])
+        for row in io_mod.read_structured(TRUTH)
+    }
+    parsed = {
+        row["LineId"]: ast.literal_eval(row["ParameterList"])
+        for row in io_mod.read_structured(PARSED)
+    }
+    assert parsed == truth

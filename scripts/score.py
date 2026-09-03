@@ -16,10 +16,26 @@ from trailparse import io as io_mod  # noqa: E402
 from trailparse.metrics import score_frames  # noqa: E402
 
 
+def index_by_line_id(rows: list[dict], label: str) -> dict[str, dict]:
+    indexed = {}
+    for row in rows:
+        line_id = row["LineId"]
+        if line_id in indexed:
+            raise ValueError(f"{label} has duplicate LineId {line_id!r}")
+        indexed[line_id] = row
+    return indexed
+
+
 def score_pair(truth_path: str, parsed_path: str) -> tuple[dict[str, float], int]:
     gt = io_mod.read_structured(Path(truth_path))
     parsed = io_mod.read_structured(Path(parsed_path))
-    assert len(gt) == len(parsed), (len(gt), len(parsed))
+    gt_by_id = index_by_line_id(gt, "truth")
+    parsed_by_id = index_by_line_id(parsed, "parsed")
+    if gt_by_id.keys() != parsed_by_id.keys():
+        missing = sorted(gt_by_id.keys() - parsed_by_id.keys())
+        extra = sorted(parsed_by_id.keys() - gt_by_id.keys())
+        raise ValueError(f"LineId mismatch: missing={missing}, extra={extra}")
+    parsed = [parsed_by_id[row["LineId"]] for row in gt]
     gt_map = {k: [r[k] for r in gt] for k in ("EventId", "EventTemplate")}
     parsed_map = {k: [r[k] for r in parsed] for k in ("EventId", "EventTemplate")}
     n_templates = len({r["EventId"] for r in parsed})

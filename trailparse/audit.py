@@ -13,11 +13,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from trailparse.io import atomic_text_writer
 from trailparse.miner import Decision
 
 
 def write_jsonl(decisions: list[Decision], path: Path) -> None:
-    with open(path, "w") as f:
+    with atomic_text_writer(path) as f:
         for d in decisions:
             f.write(
                 json.dumps(

@@ -47,6 +47,13 @@ reads this file to find low-confidence joins and propose fixes. The
 format is versioned: readers must ignore unknown fields, writers must
 not rename existing ones.
 
+The parse audit is an immutable receipt. Model proposals and human or
+threshold decisions belong in a separate append-only `*.lm-review.jsonl`
+that cites parse-audit line numbers and a digest of the source audit.
+Example text comes from the paired structured CSV, joined by `LineId`.
+An assisted parse, if produced, is a separate CSV; it never replaces the
+deterministic parser output.
+
 ## Known limits
 
 - Header split is syntactic only. Timestamps, pids, and hostnames are

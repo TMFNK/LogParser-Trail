@@ -14,7 +14,10 @@ jobs:
         with:
           python-version: "3.12"
       - name: Sync and test
-        run: uv sync --frozen --extra dev && uv run pytest -q
+        run: |
+          uv sync --frozen --extra dev
+          uv run ruff check .
+          uv run pytest -q
       - name: Sample, parse, score, golden
         run: |
           uv run python scripts/make_sample.py
@@ -25,3 +28,6 @@ jobs:
             --parsed results/parsed_sample.csv \
             --out-json results/raw/sample_scores.json
           uv run python scripts/verify_golden.py
+          git diff --exit-code -- \
+            examples/sample.log examples/sample_structured.csv \
+            results/parsed_sample.csv results/audit.jsonl
