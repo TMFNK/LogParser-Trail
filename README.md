@@ -4,15 +4,15 @@ Trail is a deterministic-first log template miner. Each parsed line gets
 a template and a receipt: one audit record per decision, so any
 template traces back to the exact lines and merges that built it.
 
-v0.1 is the deterministic core only. Planned model assist:
-`docs/PHASE2-LM.md` (stub in `scripts/lm_assist.py`). No scores on this
-page involve a model.
+The deterministic miner remains the parser of record. An optional local-model
+assist reviews low-confidence joins and near-duplicate templates without
+changing the parse CSV or audit JSONL. No scores on this page involve a model.
 
-Keywords: log parsing, template mining, audit trail, offline, Drain
-alternative.
+Keywords: log parsing, template mining, audit trail, offline, small language
+models, Drain alternative.
 
 GitHub topics: `log-parsing` `template-mining` `audit-trail` `offline`
-`reproducibility`
+`reproducibility` `small-language-models`
 
 ## One-command run
 
@@ -36,17 +36,19 @@ LogParser-Trail/
 │   ├── miner.py            # deterministic core (original code, no Drain copy)
 │   ├── audit.py            # JSONL writer + summary
 │   ├── metrics.py          # GA/PA/FGA/FTA (LogHub-2.0 formulas, Apache-2.0)
-│   └── io.py               # LogHub-shaped CSV readers/writers
+│   ├── io.py               # LogHub-shaped CSV readers/writers
+│   ├── assist.py           # candidate selection + review materialization
+│   └── lm.py               # loopback-only OpenAI-compatible client
 ├── examples/               # committed 60-line labeled sample (8 templates)
 ├── scripts/
 │   ├── make_sample.py      # seeded sample generator (seed 7)
 │   ├── parse.py            # log -> structured CSV + audit JSONL
 │   ├── score.py            # parsed CSV vs truth, four scores
 │   ├── verify_golden.py    # sample_60 GA/PA/FGA/FTA + template count
-│   └── lm_assist.py        # Phase 2 stub (exits 2, not wired)
+│   └── lm_assist.py        # local review CLI; deterministic inputs stay immutable
 ├── expected/sample_60.json # CI golden for the 60-line sample
 ├── docs/DESIGN.md          # algorithm, audit schema, known limits
-├── docs/PHASE2-LM.md       # the planned model loop
+├── docs/PHASE2-LM.md       # local-model review contract
 ├── results/                # committed sample run (parsed CSV, audit, table)
 └── tests/
 ```
@@ -65,6 +67,24 @@ the first line of a cluster. Keep real-log outputs under `results/raw/` or
 another private, ignored directory. The parser refuses to replace the
 committed public sample outputs from a different input unless
 `--allow-public-output` is explicit.
+
+## Local-model assist
+
+Start an OpenAI-compatible server bound to `127.0.0.1`, then run:
+
+```bash
+uv run python scripts/lm_assist.py \
+  --csv results/parsed_sample.csv \
+  --audit results/audit.jsonl \
+  --review results/raw/sample.lm-review.jsonl \
+  --out-csv results/raw/sample_lm.csv
+```
+
+The default endpoint is `http://127.0.0.1:8090/v1` and the default model
+alias is `qwen3.8-2b-q6k`; override them with `--base-url` and `--model`.
+Only the literal `127.0.0.1` is accepted. The client bypasses environment
+proxies, rejects redirects, and sends requests one at a time. Use `--dry-run`
+to inspect candidates without contacting a model or writing outputs.
 
 ## Scores
 

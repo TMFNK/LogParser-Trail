@@ -17,6 +17,14 @@ from trailparse.io import atomic_text_writer
 from trailparse.miner import Decision
 
 
+def read_jsonl(path: Path) -> list[dict]:
+    records = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line:
+            records.append(json.loads(line))
+    return records
+
+
 def write_jsonl(decisions: list[Decision], path: Path) -> None:
     with atomic_text_writer(path) as f:
         for d in decisions:

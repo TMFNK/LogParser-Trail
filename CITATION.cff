@@ -11,14 +11,15 @@ authors:
 abstract: >
   Trail: a deterministic-first log template miner with a per-decision
   audit trail. v0.1 ships the deterministic core, the audit JSONL format,
-  and a 60-line labeled sample. A small-local-model assist that proposes
-  template merges from the audit log is planned as Phase 2.
+  and a 60-line labeled sample. Its optional local-model assist proposes
+  audit-cited template merges and splits without changing parser outputs.
 keywords:
   - log-parsing
   - template-mining
   - audit-trail
   - offline
   - reproducibility
+  - small-language-models
 references:
   - type: article
     title: "A Large-scale Evaluation for Log Parsing Techniques: How Far are We?"

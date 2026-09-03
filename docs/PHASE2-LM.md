@@ -1,4 +1,4 @@
-# Phase 2: local-model assist (planned, not built)
+# Phase 2: local-model assist
 
 The deterministic core stays. The model only proposes template merges
 and splits, and every proposal cites the audit records behind it. A
@@ -20,7 +20,7 @@ human or a threshold accepts them. Nothing parses without a trail.
 1. Run the miner. Read its audit JSONL and paired structured CSV.
 2. Flag low-confidence joins (similarity under 0.7) and near-duplicate
    clusters whose final templates have token-level edit distance one.
-3. Send each candidate, with 3 example lines, to a local small model
+3. Send each candidate that has 3 distinct example lines to a local small model
    over an OpenAI-compatible endpoint (`127.0.0.1`, same pattern as
    the Tier A harness server script). Ask one question: same event or
    two? No log leaves the machine.
@@ -28,6 +28,21 @@ human or a threshold accepts them. Nothing parses without a trail.
    raw response, and accept/reject reason to `*.lm-review.jsonl`.
 5. If accepted decisions are applied, write a new assisted CSV. Do not
    mutate the deterministic CSV or parse audit.
+
+`scripts/lm_assist.py` implements this loop. A reply is accepted only when it
+contains one unambiguous `SAME` or `TWO` decision after any Qwen `<think>`
+block is removed. `TWO` accepts a low-confidence split; `SAME` accepts a
+near-duplicate merge. Other replies are rejected and still recorded. A
+failed request is recorded as a rejection before the CLI stops.
+
+The client uses Python's direct `HTTPConnection` to the literal `127.0.0.1`.
+It does not read proxy environment variables, does not resolve hostnames, and
+does not follow redirects. Calls are serialized with one in-flight request.
+
+Each review record uses schema `lm-review-v1` and contains the candidate kind,
+cluster ids, cited audit lines, examples, templates, source-file SHA-256
+digests, prompt version, exact request, model identity, raw response, parsed
+proposal, decision, change, and reason.
 
 ## Model
 

@@ -54,6 +54,25 @@ Example text comes from the paired structured CSV, joined by `LineId`.
 An assisted parse, if produced, is a separate CSV; it never replaces the
 deterministic parser output.
 
+## Local-model review
+
+The optional assist joins audit `line` to structured CSV `LineId`. It selects
+matched decisions below `0.7` similarity and pairs of final cluster templates
+whose token-level Levenshtein edit distance is one. A candidate is sent only
+when three distinct cited example lines are available.
+
+Prompt version `trail-lm-v1` asks for exactly `SAME` or `TWO`. For a
+low-confidence join, `TWO` accepts splitting the cited target line. For a
+near-duplicate pair, `SAME` accepts merging the clusters. Any absent,
+conflicting, or otherwise unparseable answer is rejected. Accepted changes
+are materialized only in a separate `*_lm.csv`.
+
+The append-only review schema is `lm-review-v1`. Every record stores source
+SHA-256 digests, cited audit lines, examples, templates, request payload,
+prompt version, model identity, raw and parsed response, decision, change,
+and reason. Model traffic uses direct HTTP to literal `127.0.0.1`; proxies,
+redirects, hostnames, TLS endpoints, and concurrent requests are disallowed.
+
 ## Known limits
 
 - Header split is syntactic only. Timestamps, pids, and hostnames are
@@ -69,3 +88,6 @@ deterministic parser output.
 - The committed 60-line sample is the self-contained regression fixture.
   SecOps-2k scoring runs only when the Tier B checkout sits next to this
   repo (see `./reproduce.sh`).
+- A low-confidence accepted split isolates the cited line; it does not infer
+  whether later members should follow it. The review artifact remains
+  inspectable and the deterministic output remains unchanged.
