@@ -1,0 +1,37 @@
+# env / caches (re-creatable)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+logs/*.log
+
+# LLM settings & secrets — NEVER commit
+.env
+.env.*
+*.pem
+*.key
+configs/*local*
+configs/*override*
+
+# model weights in any format (never commit)
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+*.ckpt
+
+# local run state (keep the published table, ignore raw runs)
+results/raw/
+*.pid
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# NOTE: results/parsed_sample.csv, results/audit.jsonl, and
+# results/baseline.md ARE committed on purpose. They are the worked
+# example of the audit trail format. Re-run ./reproduce.sh to refresh.

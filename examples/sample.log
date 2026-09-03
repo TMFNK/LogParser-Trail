@@ -1,0 +1,60 @@
+Jun 14 00:00:03 secops-01 sshd[27559]: Failed password for ubuntu from 203.0.113.103 port 43683 ssh2
+Jun 14 00:00:07 secops-01 sshd[11228]: Failed password for root from 203.0.113.151 port 4825 ssh2
+Jun 14 00:00:09 secops-01 sshd[28056]: Failed password for root from 203.0.113.109 port 5602 ssh2
+Jun 14 00:00:13 secops-01 sshd[29103]: Failed password for deploy from 203.0.113.213 port 38081 ssh2
+Jun 14 00:00:17 secops-01 sshd[11526]: Failed password for root from 203.0.113.151 port 27020 ssh2
+Jun 14 00:00:26 secops-01 sshd[13859]: Failed password for git from 203.0.113.76 port 28492 ssh2
+Jun 14 00:00:29 secops-01 sshd[13376]: Failed password for git from 203.0.113.145 port 54509 ssh2
+Jun 14 00:00:31 secops-01 sshd[27948]: Failed password for git from 203.0.113.165 port 13336 ssh2
+Jun 14 00:00:35 secops-01 sshd[26266]: Failed password for test from 203.0.113.146 port 4930 ssh2
+Jun 14 00:00:43 secops-01 sshd[29187]: Failed password for test from 203.0.113.111 port 51960 ssh2
+Jun 14 00:00:47 secops-01 sshd[12682]: Accepted password for deploy from 203.0.113.78 port 17304 ssh2
+Jun 14 00:00:55 secops-01 sshd[19435]: Accepted password for git from 203.0.113.136 port 33471 ssh2
+Jun 14 00:00:58 secops-01 sshd[21208]: Accepted password for git from 203.0.113.32 port 34574 ssh2
+Jun 14 00:01:00 secops-01 sshd[28287]: Accepted password for admin from 203.0.113.109 port 3593 ssh2
+Jun 14 00:01:08 secops-01 sshd[29002]: Invalid user git from 203.0.113.89 port 46590
+Jun 14 00:01:16 secops-01 sshd[12129]: Invalid user deploy from 203.0.113.217 port 7157
+Jun 14 00:01:24 secops-01 sshd[19325]: Invalid user root from 203.0.113.181 port 21314
+Jun 14 00:01:25 secops-01 sshd[25128]: Invalid user test from 203.0.113.229 port 44844
+Jun 14 00:01:26 secops-01 sshd[17150]: Invalid user ubuntu from 203.0.113.158 port 8697
+Jun 14 00:01:33 secops-01 sshd[26269]: Invalid user ubuntu from 203.0.113.191 port 17251
+Jun 14 00:01:38 secops-01 sshd[14486]: Invalid user root from 203.0.113.116 port 27346
+Jun 14 00:01:44 secops-01 sshd[22466]: Invalid user deploy from 203.0.113.73 port 47318
+Jun 14 00:01:48 secops-01 sshd[17645]: Connection closed by authenticating user admin 203.0.113.23 port 12572 [preauth]
+Jun 14 00:01:53 secops-01 sshd[19238]: Connection closed by authenticating user root 203.0.113.214 port 39632 [preauth]
+Jun 14 00:01:59 secops-01 sshd[14112]: Connection closed by authenticating user root 203.0.113.109 port 36058 [preauth]
+Jun 14 00:02:00 secops-01 sshd[24963]: Connection closed by authenticating user test 203.0.113.245 port 41498 [preauth]
+Jun 14 00:02:07 secops-01 sshd[13392]: Connection closed by authenticating user test 203.0.113.102 port 27111 [preauth]
+Jun 14 00:02:09 secops-01 sshd[16840]: Connection closed by authenticating user deploy 203.0.113.104 port 5103 [preauth]
+Jun 14 00:02:10 secops-01 sshd[13354]: pam_unix(sshd:auth): authentication failure; rhost=203.0.113.30
+Jun 14 00:02:16 secops-01 sshd[10835]: pam_unix(sshd:auth): authentication failure; rhost=203.0.113.40
+Jun 14 00:02:21 secops-01 sshd[21383]: pam_unix(sshd:auth): authentication failure; rhost=203.0.113.159
+Jun 14 00:02:29 secops-01 sshd[25269]: pam_unix(sshd:auth): authentication failure; rhost=203.0.113.123
+Jun 14 00:02:31 secops-01 sshd[21227]: pam_unix(sshd:auth): authentication failure; rhost=203.0.113.81
+Jun 14 00:02:34 secops-01 sshd[26919]: pam_unix(sshd:auth): authentication failure; rhost=203.0.113.124
+Jun 14 00:02:40 secops-01 kernel[14803]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.245 DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22
+Jun 14 00:02:45 secops-01 kernel[12982]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.236 DST=10.0.0.5 PROTO=TCP SPT=2796 DPT=22
+Jun 14 00:02:51 secops-01 kernel[17300]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.134 DST=10.0.0.5 PROTO=TCP SPT=25056 DPT=22
+Jun 14 00:02:55 secops-01 kernel[16394]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.201 DST=10.0.0.5 PROTO=TCP SPT=33968 DPT=22
+Jun 14 00:02:59 secops-01 kernel[26961]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.191 DST=10.0.0.5 PROTO=TCP SPT=53670 DPT=22
+Jun 14 00:03:04 secops-01 kernel[25474]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.189 DST=10.0.0.5 PROTO=TCP SPT=2923 DPT=22
+Jun 14 00:03:12 secops-01 kernel[21453]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.179 DST=10.0.0.5 PROTO=TCP SPT=40682 DPT=22
+Jun 14 00:03:20 secops-01 kernel[16445]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.58 DST=10.0.0.5 PROTO=TCP SPT=7718 DPT=22
+Jun 14 00:03:21 secops-01 kernel[25711]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.125 DST=10.0.0.5 PROTO=TCP SPT=41922 DPT=22
+Jun 14 00:03:23 secops-01 kernel[22731]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.206 DST=10.0.0.5 PROTO=TCP SPT=43172 DPT=22
+Jun 14 00:03:30 secops-01 kernel[20895]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.124 DST=10.0.0.5 PROTO=TCP SPT=59286 DPT=22
+Jun 14 00:03:32 secops-01 kernel[15205]: [UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.103 DST=10.0.0.5 PROTO=TCP SPT=31377 DPT=22
+Jun 14 00:03:40 secops-01 sudo[14789]: pam_unix(sudo:session): session opened for user root by admin(uid=1001)
+Jun 14 00:03:43 secops-01 sudo[27978]: pam_unix(sudo:session): session opened for user deploy by git(uid=1000)
+Jun 14 00:03:45 secops-01 sudo[27255]: pam_unix(sudo:session): session opened for user root by git(uid=1001)
+Jun 14 00:03:49 secops-01 sudo[10917]: pam_unix(sudo:session): session opened for user root by test(uid=0)
+Jun 14 00:03:55 secops-01 sudo[18498]: pam_unix(sudo:session): session opened for user root by ubuntu(uid=0)
+Jun 14 00:04:01 secops-01 sudo[25013]: pam_unix(sudo:session): session opened for user ubuntu by git(uid=0)
+Jun 14 00:04:08 secops-01 sudo[26438]: pam_unix(sudo:session): session opened for user deploy by test(uid=1001)
+Jun 14 00:04:09 secops-01 sudo[24422]: pam_unix(sudo:session): session closed for user deploy
+Jun 14 00:04:12 secops-01 sudo[14638]: pam_unix(sudo:session): session closed for user deploy
+Jun 14 00:04:13 secops-01 sudo[20681]: pam_unix(sudo:session): session closed for user deploy
+Jun 14 00:04:15 secops-01 sudo[28359]: pam_unix(sudo:session): session closed for user deploy
+Jun 14 00:04:17 secops-01 sudo[26636]: pam_unix(sudo:session): session closed for user root
+Jun 14 00:04:25 secops-01 sudo[20669]: pam_unix(sudo:session): session closed for user deploy
+Jun 14 00:04:30 secops-01 sudo[24822]: pam_unix(sudo:session): session closed for user deploy

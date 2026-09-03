@@ -1,0 +1,11 @@
+# Miner settings for Trail v0.1. Pinned — do not retune per run.
+# See docs/DESIGN.md for what each knob does.
+st: 0.5
+anchor_tokens: 2
+length_slack: 1
+# Per-token fullmatch, replaced with <*>. Same role as Drain regex.
+regex:
+  - 'SRC=\S+'
+  - 'pid=\d+'
+  - 'uid=\d+'
+  - 'auid=\d+'

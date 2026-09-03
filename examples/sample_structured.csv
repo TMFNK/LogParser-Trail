@@ -1,0 +1,61 @@
+LineId,Content,EventId,EventTemplate,ParameterList
+1,Failed password for ubuntu from 203.0.113.103 port 43683 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['ubuntu', '203.0.113.103', '43683']"
+2,Failed password for root from 203.0.113.151 port 4825 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['root', '203.0.113.151', '4825']"
+3,Failed password for root from 203.0.113.109 port 5602 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['root', '203.0.113.109', '5602']"
+4,Failed password for deploy from 203.0.113.213 port 38081 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['deploy', '203.0.113.213', '38081']"
+5,Failed password for root from 203.0.113.151 port 27020 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['root', '203.0.113.151', '27020']"
+6,Failed password for git from 203.0.113.76 port 28492 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['git', '203.0.113.76', '28492']"
+7,Failed password for git from 203.0.113.145 port 54509 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['git', '203.0.113.145', '54509']"
+8,Failed password for git from 203.0.113.165 port 13336 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['git', '203.0.113.165', '13336']"
+9,Failed password for test from 203.0.113.146 port 4930 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['test', '203.0.113.146', '4930']"
+10,Failed password for test from 203.0.113.111 port 51960 ssh2,G1,Failed password for <*> from <*> port <*> ssh2,"['test', '203.0.113.111', '51960']"
+11,Accepted password for deploy from 203.0.113.78 port 17304 ssh2,G2,Accepted password for <*> from <*> port <*> ssh2,"['deploy', '203.0.113.78', '17304']"
+12,Accepted password for git from 203.0.113.136 port 33471 ssh2,G2,Accepted password for <*> from <*> port <*> ssh2,"['git', '203.0.113.136', '33471']"
+13,Accepted password for git from 203.0.113.32 port 34574 ssh2,G2,Accepted password for <*> from <*> port <*> ssh2,"['git', '203.0.113.32', '34574']"
+14,Accepted password for admin from 203.0.113.109 port 3593 ssh2,G2,Accepted password for <*> from <*> port <*> ssh2,"['admin', '203.0.113.109', '3593']"
+15,Invalid user git from 203.0.113.89 port 46590,G3,Invalid user <*> from <*> port <*>,"['git', '203.0.113.89', '46590']"
+16,Invalid user deploy from 203.0.113.217 port 7157,G3,Invalid user <*> from <*> port <*>,"['deploy', '203.0.113.217', '7157']"
+17,Invalid user root from 203.0.113.181 port 21314,G3,Invalid user <*> from <*> port <*>,"['root', '203.0.113.181', '21314']"
+18,Invalid user test from 203.0.113.229 port 44844,G3,Invalid user <*> from <*> port <*>,"['test', '203.0.113.229', '44844']"
+19,Invalid user ubuntu from 203.0.113.158 port 8697,G3,Invalid user <*> from <*> port <*>,"['ubuntu', '203.0.113.158', '8697']"
+20,Invalid user ubuntu from 203.0.113.191 port 17251,G3,Invalid user <*> from <*> port <*>,"['ubuntu', '203.0.113.191', '17251']"
+21,Invalid user root from 203.0.113.116 port 27346,G3,Invalid user <*> from <*> port <*>,"['root', '203.0.113.116', '27346']"
+22,Invalid user deploy from 203.0.113.73 port 47318,G3,Invalid user <*> from <*> port <*>,"['deploy', '203.0.113.73', '47318']"
+23,Connection closed by authenticating user admin 203.0.113.23 port 12572 [preauth],G4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['admin', '203.0.113.23', '12572']"
+24,Connection closed by authenticating user root 203.0.113.214 port 39632 [preauth],G4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['root', '203.0.113.214', '39632']"
+25,Connection closed by authenticating user root 203.0.113.109 port 36058 [preauth],G4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['root', '203.0.113.109', '36058']"
+26,Connection closed by authenticating user test 203.0.113.245 port 41498 [preauth],G4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['test', '203.0.113.245', '41498']"
+27,Connection closed by authenticating user test 203.0.113.102 port 27111 [preauth],G4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['test', '203.0.113.102', '27111']"
+28,Connection closed by authenticating user deploy 203.0.113.104 port 5103 [preauth],G4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['deploy', '203.0.113.104', '5103']"
+29,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.30,G5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.30']
+30,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.40,G5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.40']
+31,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.159,G5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.159']
+32,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.123,G5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.123']
+33,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.81,G5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.81']
+34,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.124,G5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.124']
+35,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.245 DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.245', 'SPT=63415']"
+36,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.236 DST=10.0.0.5 PROTO=TCP SPT=2796 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.236', 'SPT=2796']"
+37,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.134 DST=10.0.0.5 PROTO=TCP SPT=25056 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.134', 'SPT=25056']"
+38,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.201 DST=10.0.0.5 PROTO=TCP SPT=33968 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.201', 'SPT=33968']"
+39,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.191 DST=10.0.0.5 PROTO=TCP SPT=53670 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.191', 'SPT=53670']"
+40,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.189 DST=10.0.0.5 PROTO=TCP SPT=2923 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.189', 'SPT=2923']"
+41,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.179 DST=10.0.0.5 PROTO=TCP SPT=40682 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.179', 'SPT=40682']"
+42,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.58 DST=10.0.0.5 PROTO=TCP SPT=7718 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.58', 'SPT=7718']"
+43,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.125 DST=10.0.0.5 PROTO=TCP SPT=41922 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.125', 'SPT=41922']"
+44,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.206 DST=10.0.0.5 PROTO=TCP SPT=43172 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.206', 'SPT=43172']"
+45,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.124 DST=10.0.0.5 PROTO=TCP SPT=59286 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.124', 'SPT=59286']"
+46,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.103 DST=10.0.0.5 PROTO=TCP SPT=31377 DPT=22,G6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.103', 'SPT=31377']"
+47,pam_unix(sudo:session): session opened for user root by admin(uid=1001),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'admin(uid=1001)']"
+48,pam_unix(sudo:session): session opened for user deploy by git(uid=1000),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['deploy', 'git(uid=1000)']"
+49,pam_unix(sudo:session): session opened for user root by git(uid=1001),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'git(uid=1001)']"
+50,pam_unix(sudo:session): session opened for user root by test(uid=0),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'test(uid=0)']"
+51,pam_unix(sudo:session): session opened for user root by ubuntu(uid=0),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'ubuntu(uid=0)']"
+52,pam_unix(sudo:session): session opened for user ubuntu by git(uid=0),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['ubuntu', 'git(uid=0)']"
+53,pam_unix(sudo:session): session opened for user deploy by test(uid=1001),G7,pam_unix(sudo:session): session opened for user <*> by <*>,"['deploy', 'test(uid=1001)']"
+54,pam_unix(sudo:session): session closed for user deploy,G8,pam_unix(sudo:session): session closed for user <*>,['deploy']
+55,pam_unix(sudo:session): session closed for user deploy,G8,pam_unix(sudo:session): session closed for user <*>,['deploy']
+56,pam_unix(sudo:session): session closed for user deploy,G8,pam_unix(sudo:session): session closed for user <*>,['deploy']
+57,pam_unix(sudo:session): session closed for user deploy,G8,pam_unix(sudo:session): session closed for user <*>,['deploy']
+58,pam_unix(sudo:session): session closed for user root,G8,pam_unix(sudo:session): session closed for user <*>,['root']
+59,pam_unix(sudo:session): session closed for user deploy,G8,pam_unix(sudo:session): session closed for user <*>,['deploy']
+60,pam_unix(sudo:session): session closed for user deploy,G8,pam_unix(sudo:session): session closed for user <*>,['deploy']

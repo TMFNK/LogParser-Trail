@@ -1,0 +1,21 @@
+LogParser-Trail
+Copyright 2026 MbitAI — https://www.mbitai.com
+
+This product includes software developed by MbitAI
+(https://www.mbitai.com).
+
+The deterministic miner in trailparse/ is original MbitAI code. It does
+not copy logpai/logparser (Drain, Apache-2.0) or any other parser
+implementation.
+
+Metric formulas in trailparse/metrics.py are an independent Apache-2.0
+implementation of the LogHub-2.0 scores (Jiang et al., ISSTA'24, section
+4.2), shared with TMFNK/LogParser-Harness and TMFNK/LogParser-Dataset.
+They do not copy logpai/Loghub-2.0 benchmark/evaluation (GPL-3).
+
+Sample logs in examples/ are synthetic. IP addresses use only
+documentation ranges (RFC 5737) and RFC 1918 private ranges.
+
+Per Apache License 2.0 section 4(d), any Derivative Works you distribute
+must include a readable copy of these attribution notices. This NOTICE
+file may not be removed.

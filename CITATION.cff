@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: Cite this software if you use the Trail parser or its audit trail format.
+title: LogParser-Trail
+version: 0.1.0
+date-released: "2026-09-03"
+license: Apache-2.0
+repository-code: https://github.com/TMFNK/LogParser-Trail
+authors:
+  - name: MbitAI
+    website: https://www.mbitai.com
+abstract: >
+  Trail: a deterministic-first log template miner with a per-decision
+  audit trail. v0.1 ships the deterministic core, the audit JSONL format,
+  and a 60-line labeled sample. A small-local-model assist that proposes
+  template merges from the audit log is planned as Phase 2.
+keywords:
+  - log-parsing
+  - template-mining
+  - audit-trail
+  - offline
+  - reproducibility
+references:
+  - type: article
+    title: "A Large-scale Evaluation for Log Parsing Techniques: How Far are We?"
+    authors:
+      - family-names: Jiang
+        given-names: Zhihan
+    year: 2024
+    url: https://arxiv.org/abs/2308.10828

@@ -1,0 +1,60 @@
+{"line": 1, "cluster": "T1", "decision": "new_cluster", "similarity": 0.0, "template": "Failed password for ubuntu from 203.0.113.103 port 43683 ssh2"}
+{"line": 2, "cluster": "T1", "decision": "matched", "similarity": 0.6667, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 3, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 4, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 5, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 6, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 7, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 8, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 9, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 10, "cluster": "T1", "decision": "matched", "similarity": 1.0, "template": "Failed password for <*> from <*> port <*> ssh2"}
+{"line": 11, "cluster": "T2", "decision": "new_cluster", "similarity": 0.0, "template": "Accepted password for deploy from 203.0.113.78 port 17304 ssh2"}
+{"line": 12, "cluster": "T2", "decision": "matched", "similarity": 0.6667, "template": "Accepted password for <*> from <*> port <*> ssh2"}
+{"line": 13, "cluster": "T2", "decision": "matched", "similarity": 1.0, "template": "Accepted password for <*> from <*> port <*> ssh2"}
+{"line": 14, "cluster": "T2", "decision": "matched", "similarity": 1.0, "template": "Accepted password for <*> from <*> port <*> ssh2"}
+{"line": 15, "cluster": "T3", "decision": "new_cluster", "similarity": 0.0, "template": "Invalid user git from 203.0.113.89 port 46590"}
+{"line": 16, "cluster": "T3", "decision": "matched", "similarity": 0.5714, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 17, "cluster": "T3", "decision": "matched", "similarity": 1.0, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 18, "cluster": "T3", "decision": "matched", "similarity": 1.0, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 19, "cluster": "T3", "decision": "matched", "similarity": 1.0, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 20, "cluster": "T3", "decision": "matched", "similarity": 1.0, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 21, "cluster": "T3", "decision": "matched", "similarity": 1.0, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 22, "cluster": "T3", "decision": "matched", "similarity": 1.0, "template": "Invalid user <*> from <*> port <*>"}
+{"line": 23, "cluster": "T4", "decision": "new_cluster", "similarity": 0.0, "template": "Connection closed by authenticating user admin 203.0.113.23 port 12572 [preauth]"}
+{"line": 24, "cluster": "T4", "decision": "matched", "similarity": 0.7, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
+{"line": 25, "cluster": "T4", "decision": "matched", "similarity": 1.0, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
+{"line": 26, "cluster": "T4", "decision": "matched", "similarity": 1.0, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
+{"line": 27, "cluster": "T4", "decision": "matched", "similarity": 1.0, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
+{"line": 28, "cluster": "T4", "decision": "matched", "similarity": 1.0, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
+{"line": 29, "cluster": "T5", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sshd:auth): authentication failure; rhost=203.0.113.30"}
+{"line": 30, "cluster": "T5", "decision": "matched", "similarity": 0.75, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
+{"line": 31, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
+{"line": 32, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
+{"line": 33, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
+{"line": 34, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
+{"line": 35, "cluster": "T6", "decision": "new_cluster", "similarity": 0.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22"}
+{"line": 36, "cluster": "T6", "decision": "matched", "similarity": 0.8889, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 37, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 38, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 39, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 40, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 41, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 42, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 43, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 44, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 45, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 46, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
+{"line": 47, "cluster": "T7", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sudo:session): session opened for user root by admin(uid=1001)"}
+{"line": 48, "cluster": "T7", "decision": "matched", "similarity": 0.75, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 49, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 50, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 51, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 52, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 53, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 54, "cluster": "T8", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sudo:session): session closed for user deploy"}
+{"line": 55, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user deploy"}
+{"line": 56, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user deploy"}
+{"line": 57, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user deploy"}
+{"line": 58, "cluster": "T8", "decision": "matched", "similarity": 0.8333, "template": "pam_unix(sudo:session): session closed for user <*>"}
+{"line": 59, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user <*>"}
+{"line": 60, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user <*>"}

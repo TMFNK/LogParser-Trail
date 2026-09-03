@@ -1,0 +1,27 @@
+name: Reproduce sample
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - name: Sync and test
+        run: uv sync --frozen --extra dev && uv run pytest -q
+      - name: Sample, parse, score, golden
+        run: |
+          uv run python scripts/make_sample.py
+          uv run python scripts/parse.py --input examples/sample.log \
+            --out-csv results/parsed_sample.csv --out-audit results/audit.jsonl
+          uv run python scripts/score.py \
+            --truth examples/sample_structured.csv \
+            --parsed results/parsed_sample.csv \
+            --out-json results/raw/sample_scores.json
+          uv run python scripts/verify_golden.py
