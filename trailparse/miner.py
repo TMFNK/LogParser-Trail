@@ -12,14 +12,22 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from typing import NamedTuple
 
 WILDCARD = "<*>"
 
 
-def _compile_masks(
-    regex: list[str | dict[str, object]],
-) -> list[tuple[re.Pattern, str, int | None, str | None]]:
-    """Compile mask entries to (pattern, replacement, position, next) tuples.
+class Mask(NamedTuple):
+    """One whole-token mask: pattern, replacement, optional position/next."""
+
+    pattern: re.Pattern
+    replace: str
+    position: int | None = None
+    nxt: str | None = None
+
+
+def _compile_masks(regex: list[str | dict[str, object]]) -> list[Mask]:
+    """Compile mask entries to Mask triples.
 
     A plain string entry masks with bare ``<*>`` at any position (the
     historical behavior). A mapping entry names its replacement, e.g.
@@ -31,12 +39,12 @@ def _compile_masks(
     compiled = []
     for entry in regex:
         if isinstance(entry, str):
-            compiled.append((re.compile(entry), WILDCARD, None, None))
+            compiled.append(Mask(re.compile(entry), WILDCARD))
         else:
             position = entry.get("position")
             nxt = entry.get("next")
             compiled.append(
-                (
+                Mask(
                     re.compile(str(entry["pattern"])),
                     str(entry.get("replace", WILDCARD)),
                     int(position) if position is not None else None,
@@ -135,15 +143,15 @@ class Miner:
             return tokens
         out = []
         for idx, tok in enumerate(tokens):
-            for cre, replace, position, nxt in self.token_masks:
-                if position is not None and position != idx:
+            for mask in self.token_masks:
+                if mask.position is not None and mask.position != idx:
                     continue
-                if nxt is not None and (
-                    idx + 1 >= len(tokens) or tokens[idx + 1] != nxt
+                if mask.nxt is not None and (
+                    idx + 1 >= len(tokens) or tokens[idx + 1] != mask.nxt
                 ):
                     continue
-                if cre.fullmatch(tok):
-                    tok = replace
+                if mask.pattern.fullmatch(tok):
+                    tok = mask.replace
                     break
             out.append(tok)
         return out

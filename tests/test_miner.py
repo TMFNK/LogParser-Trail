@@ -195,8 +195,9 @@ def test_identity_keys_split_same_shape_lines():
 
 def test_identity_keys_ignore_generalized_positions():
     miner = Miner(st=0.5, anchor_tokens=2, identity_keys=["PROTO"])
-    miner.feed(1, "[UFW BLOCK] IN=eth0 OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=TCP SPT=1 DPT=2")
-    miner.feed(2, "[UFW BLOCK] IN=eth1 OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=TCP SPT=3 DPT=4")
+    base = "[UFW BLOCK] IN={inn} OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=TCP SPT={s} DPT={d}"
+    miner.feed(1, base.format(inn="eth0", s=1, d=2))
+    miner.feed(2, base.format(inn="eth1", s=3, d=4))
     assert len(miner.clusters) == 1
 
 
