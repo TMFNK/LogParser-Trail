@@ -27,31 +27,31 @@ LineId,Content,EventId,EventTemplate,ParameterList
 26,Connection closed by authenticating user test 203.0.113.245 port 41498 [preauth],T4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['test', '203.0.113.245', '41498']"
 27,Connection closed by authenticating user test 203.0.113.102 port 27111 [preauth],T4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['test', '203.0.113.102', '27111']"
 28,Connection closed by authenticating user deploy 203.0.113.104 port 5103 [preauth],T4,Connection closed by authenticating user <*> <*> port <*> [preauth],"['deploy', '203.0.113.104', '5103']"
-29,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.30,T5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.30']
-30,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.40,T5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.40']
-31,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.159,T5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.159']
-32,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.123,T5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.123']
-33,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.81,T5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.81']
-34,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.124,T5,pam_unix(sshd:auth): authentication failure; <*>,['rhost=203.0.113.124']
-35,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.245 DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.245', 'SPT=63415']"
-36,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.236 DST=10.0.0.5 PROTO=TCP SPT=2796 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.236', 'SPT=2796']"
-37,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.134 DST=10.0.0.5 PROTO=TCP SPT=25056 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.134', 'SPT=25056']"
-38,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.201 DST=10.0.0.5 PROTO=TCP SPT=33968 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.201', 'SPT=33968']"
-39,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.191 DST=10.0.0.5 PROTO=TCP SPT=53670 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.191', 'SPT=53670']"
-40,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.189 DST=10.0.0.5 PROTO=TCP SPT=2923 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.189', 'SPT=2923']"
-41,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.179 DST=10.0.0.5 PROTO=TCP SPT=40682 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.179', 'SPT=40682']"
-42,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.58 DST=10.0.0.5 PROTO=TCP SPT=7718 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.58', 'SPT=7718']"
-43,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.125 DST=10.0.0.5 PROTO=TCP SPT=41922 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.125', 'SPT=41922']"
-44,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.206 DST=10.0.0.5 PROTO=TCP SPT=43172 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.206', 'SPT=43172']"
-45,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.124 DST=10.0.0.5 PROTO=TCP SPT=59286 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.124', 'SPT=59286']"
-46,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.103 DST=10.0.0.5 PROTO=TCP SPT=31377 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22,"['SRC=203.0.113.103', 'SPT=31377']"
-47,pam_unix(sudo:session): session opened for user root by admin(uid=1001),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'admin(uid=1001)']"
-48,pam_unix(sudo:session): session opened for user deploy by git(uid=1000),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['deploy', 'git(uid=1000)']"
-49,pam_unix(sudo:session): session opened for user root by git(uid=1001),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'git(uid=1001)']"
-50,pam_unix(sudo:session): session opened for user root by test(uid=0),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'test(uid=0)']"
-51,pam_unix(sudo:session): session opened for user root by ubuntu(uid=0),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['root', 'ubuntu(uid=0)']"
-52,pam_unix(sudo:session): session opened for user ubuntu by git(uid=0),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['ubuntu', 'git(uid=0)']"
-53,pam_unix(sudo:session): session opened for user deploy by test(uid=1001),T7,pam_unix(sudo:session): session opened for user <*> by <*>,"['deploy', 'test(uid=1001)']"
+29,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.30,T5,pam_unix(sshd:auth): authentication failure; rhost=<*>,['203.0.113.30']
+30,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.40,T5,pam_unix(sshd:auth): authentication failure; rhost=<*>,['203.0.113.40']
+31,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.159,T5,pam_unix(sshd:auth): authentication failure; rhost=<*>,['203.0.113.159']
+32,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.123,T5,pam_unix(sshd:auth): authentication failure; rhost=<*>,['203.0.113.123']
+33,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.81,T5,pam_unix(sshd:auth): authentication failure; rhost=<*>,['203.0.113.81']
+34,pam_unix(sshd:auth): authentication failure; rhost=203.0.113.124,T5,pam_unix(sshd:auth): authentication failure; rhost=<*>,['203.0.113.124']
+35,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.245 DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.245', '63415']"
+36,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.236 DST=10.0.0.5 PROTO=TCP SPT=2796 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.236', '2796']"
+37,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.134 DST=10.0.0.5 PROTO=TCP SPT=25056 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.134', '25056']"
+38,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.201 DST=10.0.0.5 PROTO=TCP SPT=33968 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.201', '33968']"
+39,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.191 DST=10.0.0.5 PROTO=TCP SPT=53670 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.191', '53670']"
+40,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.189 DST=10.0.0.5 PROTO=TCP SPT=2923 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.189', '2923']"
+41,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.179 DST=10.0.0.5 PROTO=TCP SPT=40682 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.179', '40682']"
+42,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.58 DST=10.0.0.5 PROTO=TCP SPT=7718 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.58', '7718']"
+43,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.125 DST=10.0.0.5 PROTO=TCP SPT=41922 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.125', '41922']"
+44,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.206 DST=10.0.0.5 PROTO=TCP SPT=43172 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.206', '43172']"
+45,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.124 DST=10.0.0.5 PROTO=TCP SPT=59286 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.124', '59286']"
+46,[UFW BLOCK] IN=eth0 OUT= SRC=203.0.113.103 DST=10.0.0.5 PROTO=TCP SPT=31377 DPT=22,T6,[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22,"['203.0.113.103', '31377']"
+47,pam_unix(sudo:session): session opened for user root by admin(uid=1001),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['root', 'admin', '1001']"
+48,pam_unix(sudo:session): session opened for user deploy by git(uid=1000),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['deploy', 'git', '1000']"
+49,pam_unix(sudo:session): session opened for user root by git(uid=1001),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['root', 'git', '1001']"
+50,pam_unix(sudo:session): session opened for user root by test(uid=0),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['root', 'test', '0']"
+51,pam_unix(sudo:session): session opened for user root by ubuntu(uid=0),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['root', 'ubuntu', '0']"
+52,pam_unix(sudo:session): session opened for user ubuntu by git(uid=0),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['ubuntu', 'git', '0']"
+53,pam_unix(sudo:session): session opened for user deploy by test(uid=1001),T7,pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>),"['deploy', 'test', '1001']"
 54,pam_unix(sudo:session): session closed for user deploy,T8,pam_unix(sudo:session): session closed for user <*>,['deploy']
 55,pam_unix(sudo:session): session closed for user deploy,T8,pam_unix(sudo:session): session closed for user <*>,['deploy']
 56,pam_unix(sudo:session): session closed for user deploy,T8,pam_unix(sudo:session): session closed for user <*>,['deploy']

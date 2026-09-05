@@ -41,7 +41,7 @@ and runs the `scripts/verify_secops.py` gate.
 
 | Item                                                 | Where                                                      |
 | ---------------------------------------------------- | ---------------------------------------------------------- |
-| Miner `st`, `anchor_tokens`, `length_slack`, `regex` | `configs/miner.yaml` (`st: 0.5`, 2 anchors, slack 1)       |
+| Miner `st`, `anchor_tokens`, `length_slack`, `regex`, `identity_keys` | `configs/miner.yaml` (`st: 0.5`, 2 anchors, slack 1) |
 | Sample seed and length                               | `scripts/make_sample.py` (seed 7, 60 lines, 8 templates)   |
 | Metric formulas                                      | `trailparse/metrics.py` (Jiang et al., ISSTA'24 §4.2)      |
 | Expected sample scores                               | `expected/sample_60.json` (GA/PA/FGA/FTA 1.0, 8 templates) |
@@ -160,7 +160,9 @@ See `results/baseline.md`. The 60-line sample is the CI golden
 appended only when the Tier B checkout is present; they also have to
 clear the `verify_secops.py` tight gate. Tight and loose FTA coincide:
 the loose ground truth differs in `EventId` only and FTA is computed
-over template strings.
+over template strings. Loose GA stays low by construction: `L_FW_BLOCK`
+spans TCP/UDP/ICMP while the parser splits protocols on the `PROTO`
+identity key, so no parsed cluster equals that coarse set.
 
 ## License
 

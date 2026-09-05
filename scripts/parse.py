@@ -80,6 +80,7 @@ def main() -> None:
         anchor_tokens=int(cfg["anchor_tokens"]),
         length_slack=int(cfg.get("length_slack", 0)),
         regex=list(cfg.get("regex") or []),
+        identity_keys=list(cfg.get("identity_keys") or []),
     )
 
     fed: list[tuple[int, str, Cluster]] = []

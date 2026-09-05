@@ -127,3 +127,111 @@ def test_similarity_edge_cases():
     assert similarity(["a", "b"], ["a", "c"]) == 0.5
     assert similarity(["x", "y"], ["x", "<*>"]) == 1.0
     assert merge(["a", "b"], ["a", "c"]) == ["a", "<*>"]
+
+
+def test_mask_mapping_keeps_field_name():
+    miner = Miner(regex=[{"pattern": r"pid=\d+", "replace": "pid=<*>"}])
+    cluster = miner.feed(1, "USER_AUTH pid=1234 res=ok")
+    assert cluster.template == ["USER_AUTH", "pid=<*>", "res=ok"]
+
+
+def test_string_mask_still_means_bare_wildcard():
+    miner = Miner(regex=[r"pid=\d+"])
+    cluster = miner.feed(1, "USER_AUTH pid=1234 res=ok")
+    assert cluster.template == ["USER_AUTH", "<*>", "res=ok"]
+
+
+def test_merge_preserves_shared_key_prefix():
+    assert merge(["user=root"], ["user=admin"]) == ["user=<*>"]
+    assert merge(["IN=eth0"], ["IN=lo"]) == ["IN=<*>"]
+    # differing keys fall back to bare wildcard, as do bare tokens
+    assert merge(["user=root"], ["group=wheel"]) == ["<*>"]
+    assert merge(["root"], ["admin"]) == ["<*>"]
+    # already-generalized positions are stable
+    assert merge(["user=<*>"], ["user=bob"]) == ["user=<*>"]
+    assert merge(["<*>"], ["anything"]) == ["<*>"]
+
+
+def test_key_aware_template_positions_still_match():
+    assert similarity(["user=bob"], ["user=<*>"]) == 1.0
+    assert similarity(["a", "user=bob"], ["a", "user=<*>"]) == 1.0
+
+
+def test_params_for_splits_compound_wildcards():
+    miner = Miner(
+        regex=[{"pattern": r"^\S+\(uid=\d+\)$", "replace": "<*>(uid=<*>)"}]
+    )
+    raw = "session opened for user root by admin(uid=1000)"
+    cluster = miner.feed(1, raw)
+    assert cluster.template[-1] == "<*>(uid=<*>)"
+    assert miner.params_for(raw, cluster) == ["admin", "1000"]
+
+
+def test_params_for_bare_wildcard_yields_whole_token():
+    miner = Miner(regex=[r"SRC=\S+"])
+    cluster = miner.feed(1, "event start SRC=203.0.113.7")
+    assert miner.params_for("event start SRC=203.0.113.7", cluster) == [
+        "SRC=203.0.113.7"
+    ]
+
+
+def test_identity_keys_split_same_shape_lines():
+    lines = [
+        "[UFW BLOCK] IN=eth0 OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=TCP SPT=1 DPT=2",
+        "[UFW BLOCK] IN=eth0 OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=UDP SPT=1 DPT=2",
+    ]
+    plain = Miner(st=0.5, anchor_tokens=2)
+    for i, line in enumerate(lines, start=1):
+        plain.feed(i, line)
+    assert len(plain.clusters) == 1
+
+    strict = Miner(st=0.5, anchor_tokens=2, identity_keys=["PROTO"])
+    for i, line in enumerate(lines, start=1):
+        strict.feed(i, line)
+    assert len(strict.clusters) == 2
+    protos = sorted(c.template[6] for c in strict.clusters)
+    assert protos == ["PROTO=TCP", "PROTO=UDP"]
+
+
+def test_identity_keys_ignore_generalized_positions():
+    miner = Miner(st=0.5, anchor_tokens=2, identity_keys=["PROTO"])
+    miner.feed(1, "[UFW BLOCK] IN=eth0 OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=TCP SPT=1 DPT=2")
+    miner.feed(2, "[UFW BLOCK] IN=eth1 OUT= SRC=1.1.1.1 DST=2.2.2.2 PROTO=TCP SPT=3 DPT=4")
+    assert len(miner.clusters) == 1
+
+
+def test_positional_mask_fires_only_at_its_index():
+    miner = Miner(
+        regex=[
+            {
+                "pattern": r"^[a-z][a-z0-9_.-]*$",
+                "replace": "<*>",
+                "position": 0,
+                "next": ":",
+            }
+        ]
+    )
+    first = miner.feed(1, "root : user NOT authorized")
+    second = miner.feed(2, "bob : user NOT authorized")
+    assert first.template[0] == "<*>"
+    assert first.cid == second.cid
+    # same shape later in the line is left alone
+    third = miner.feed(3, "root : run root command")
+    assert third.template[3] == "root"
+
+
+def test_positional_mask_requires_its_follower():
+    miner = Miner(
+        regex=[
+            {
+                "pattern": r"^[a-z][a-z0-9_.-]*$",
+                "replace": "<*>",
+                "position": 0,
+                "next": ":",
+            }
+        ]
+    )
+    # "reverse mapping ..." and "mod_jk child ..." stay literal
+    for raw in ("reverse mapping check", "mod_jk child init"):
+        cluster = miner.feed(1, raw)
+        assert cluster.template[0] != "<*>", raw

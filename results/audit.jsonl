@@ -27,30 +27,30 @@
 {"line": 27, "cluster": "T4", "decision": "matched", "similarity": 1.0, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
 {"line": 28, "cluster": "T4", "decision": "matched", "similarity": 1.0, "template": "Connection closed by authenticating user <*> <*> port <*> [preauth]"}
 {"line": 29, "cluster": "T5", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sshd:auth): authentication failure; rhost=203.0.113.30"}
-{"line": 30, "cluster": "T5", "decision": "matched", "similarity": 0.75, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
-{"line": 31, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
-{"line": 32, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
-{"line": 33, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
-{"line": 34, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; <*>"}
-{"line": 35, "cluster": "T6", "decision": "new_cluster", "similarity": 0.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22"}
-{"line": 36, "cluster": "T6", "decision": "matched", "similarity": 0.8889, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 37, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 38, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 39, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 40, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 41, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 42, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 43, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 44, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 45, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 46, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22"}
-{"line": 47, "cluster": "T7", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sudo:session): session opened for user root by admin(uid=1001)"}
-{"line": 48, "cluster": "T7", "decision": "matched", "similarity": 0.75, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
-{"line": 49, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
-{"line": 50, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
-{"line": 51, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
-{"line": 52, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
-{"line": 53, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>"}
+{"line": 30, "cluster": "T5", "decision": "matched", "similarity": 0.75, "template": "pam_unix(sshd:auth): authentication failure; rhost=<*>"}
+{"line": 31, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; rhost=<*>"}
+{"line": 32, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; rhost=<*>"}
+{"line": 33, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; rhost=<*>"}
+{"line": 34, "cluster": "T5", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sshd:auth): authentication failure; rhost=<*>"}
+{"line": 35, "cluster": "T6", "decision": "new_cluster", "similarity": 0.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=63415 DPT=22"}
+{"line": 36, "cluster": "T6", "decision": "matched", "similarity": 0.8889, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 37, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 38, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 39, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 40, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 41, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 42, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 43, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 44, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 45, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 46, "cluster": "T6", "decision": "matched", "similarity": 1.0, "template": "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22"}
+{"line": 47, "cluster": "T7", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sudo:session): session opened for user root by <*>(uid=<*>)"}
+{"line": 48, "cluster": "T7", "decision": "matched", "similarity": 0.875, "template": "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)"}
+{"line": 49, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)"}
+{"line": 50, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)"}
+{"line": 51, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)"}
+{"line": 52, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)"}
+{"line": 53, "cluster": "T7", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)"}
 {"line": 54, "cluster": "T8", "decision": "new_cluster", "similarity": 0.0, "template": "pam_unix(sudo:session): session closed for user deploy"}
 {"line": 55, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user deploy"}
 {"line": 56, "cluster": "T8", "decision": "matched", "similarity": 1.0, "template": "pam_unix(sudo:session): session closed for user deploy"}

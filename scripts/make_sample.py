@@ -51,23 +51,23 @@ TEMPLATES = [
     (
         "G5",
         6,
-        "pam_unix(sshd:auth): authentication failure; {rhost}",
-        "pam_unix(sshd:auth): authentication failure; <*>",
-        ["rhost"],
+        "pam_unix(sshd:auth): authentication failure; rhost={rip}",
+        "pam_unix(sshd:auth): authentication failure; rhost=<*>",
+        ["rip"],
     ),
     (
         "G6",
         12,
-        "[UFW BLOCK] IN=eth0 OUT= {src} DST=10.0.0.5 PROTO=TCP {spt} DPT=22",
-        "[UFW BLOCK] IN=eth0 OUT= <*> DST=10.0.0.5 PROTO=TCP <*> DPT=22",
-        ["src", "spt"],
+        "[UFW BLOCK] IN=eth0 OUT= SRC={sip} DST=10.0.0.5 PROTO=TCP SPT={sp} DPT=22",
+        "[UFW BLOCK] IN=eth0 OUT= SRC=<*> DST=10.0.0.5 PROTO=TCP SPT=<*> DPT=22",
+        ["sip", "sp"],
     ),
     (
         "G7",
         7,
-        "pam_unix(sudo:session): session opened for user {t} by {by}",
-        "pam_unix(sudo:session): session opened for user <*> by <*>",
-        ["t", "by"],
+        "pam_unix(sudo:session): session opened for user {t} by {bu}(uid={bi})",
+        "pam_unix(sudo:session): session opened for user <*> by <*>(uid=<*>)",
+        ["t", "bu", "bi"],
     ),
     (
         "G8",
@@ -105,10 +105,11 @@ def main() -> None:
                 "ip": ip,
                 "p": p,
                 "id": uid,
-                "rhost": f"rhost={ip}",
-                "src": f"SRC={ip}",
-                "spt": f"SPT={p}",
-                "by": f"{u}(uid={uid})",
+                "rip": ip,
+                "sip": ip,
+                "sp": p,
+                "bu": u,
+                "bi": uid,
             }
             lid += 1
             ts += timedelta(seconds=rng.randint(1, 9))

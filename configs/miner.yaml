@@ -3,9 +3,41 @@
 st: 0.5
 anchor_tokens: 2
 length_slack: 1
-# Per-token fullmatch, replaced with <*>. Same role as Drain regex.
+# Field names that identify a template: a candidate cluster is rejected
+# when template and line carry the same key with different values
+# (PROTO=TCP vs PROTO=UDP keeps UFW BLOCK/ALLOW-protocol lines apart).
+# Everything else may still generalize through key-aware merge.
+identity_keys:
+  - PROTO
+# Whole-token masks (fullmatch). A mask replaces the token with its
+# `replace` string, so field names survive into the template as
+# `key=<*>`, matching the ground-truth convention. A plain string entry
+# would mask with bare `<*>` (kept for compatibility, unused here).
+# A mapping may also carry `position` to fire at one token index only.
 regex:
-  - 'SRC=\S+'
-  - 'pid=\d+'
-  - 'uid=\d+'
-  - 'auid=\d+'
+  # Anchor- and similarity-critical: pid sits in the audit anchor window
+  # and SRC decides UFW merges at st=0.5. uid/auid need no mask: lines
+  # sharing the key generalize via merge, while constant values (S08
+  # uid=0) stay literal.
+  - pattern: 'SRC=\S+'
+    replace: 'SRC=<*>'
+  - pattern: 'pid=\d+'
+    replace: 'pid=<*>'
+  # sudo "by user(uid=id)" values, e.g. www-data(uid=1001).
+  - pattern: '^\S+\(uid=\d+\)$'
+    replace: '<*>(uid=<*>)'
+  # Bracketed IPs, e.g. [203.0.113.50] in reverse-mapping lines.
+  - pattern: '^\[(\d+\.){3}\d+\]$'
+    replace: '[<*>]'
+  # sshd disconnect reason suffix, e.g. port 17073:11:.
+  - pattern: '^\S+:11:$'
+    replace: '<*>:11:'
+  # Leading username, e.g. "root : user NOT authorized ...". Position 0
+  # with a ":" follower only: sudo lines start with the invoking user,
+  # an open vocabulary that would otherwise defeat the anchor rule and
+  # fragment one template per user. The follower keeps lookalikes out:
+  # "reverse mapping ..." and Apache's "mod_jk child ..." stay literal.
+  - pattern: '^[a-z][a-z0-9_.-]*$'
+    replace: '<*>'
+    position: 0
+    next: ':'

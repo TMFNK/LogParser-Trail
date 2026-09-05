@@ -10,17 +10,33 @@ Phase 2 model assists grouping instead of replacing it.
 1. Strip the syslog header (`Mon DD HH:MM:SS host proc[pid]:`,
    one regex in `trailparse/io.py`). Only the message part is mined.
    Lines that do not match the shape pass through unchanged.
-2. Split the message on whitespace. Configured token regexes use
-   `fullmatch`; matching tokens are replaced with `<*>`.
+2. Split the message on whitespace. Configured token masks use
+   `fullmatch`; a matching token is replaced with its configured
+   `replace` string. Replacements keep the field name (`pid=<*>`),
+   matching the ground-truth convention; a plain string entry masks
+   with bare `<*>` (kept for compatibility).
 3. Candidates are clusters whose token counts differ by at most
    `length_slack` (1) and whose first `anchor_tokens` (2) match exactly.
    Anything else cannot merge.
-4. Among candidates, take the highest token similarity. Exact tokens and
-   template `<*>` positions count as matches; the denominator is the
+4. A candidate is further rejected when template and line disagree on
+   an `identity_keys` field: same `key=` with different values
+   (`PROTO=TCP` vs `PROTO=UDP`). Identity keys name closed-vocabulary
+   fields that tell templates apart; everything else may still
+   generalize through key-aware merge. A mask may also carry
+   `position` to fire at one token index only (the leading username).
+   A mask may further require a literal follower with `next`, so the
+   username mask fires on `root : ...` but leaves `reverse mapping ...`
+   and `mod_jk child ...` literal.
+5. Among candidates, take the highest token similarity. Exact tokens and
+   any template position holding `<*>` (bare or key-aware, e.g.
+   `user=<*>`) count as matches; the denominator is the
    longer token count. Join at `st >= 0.5`, else open a new cluster
    `T<n>`.
-5. On join, positions that differ or exist on only one side become `<*>`
-   for good. Templates only ever generalize, never split.
+5. On join, positions that differ generalize: tokens sharing a `key=`
+   prefix become `key=<*>`, anything else becomes bare `<*>`, for good.
+   Templates only ever generalize, never split. A compound template
+   position such as `<*>(uid=<*>)` yields one parameter per `<*>`
+   when rows are written.
 
 Settings live in `configs/miner.yaml` and are pinned.
 
@@ -84,8 +100,9 @@ unless explicitly raised.
 
 - Header split is syntactic only. Timestamps, pids, and hostnames are
   dropped, not parsed. No per-field semantics yet.
-- Token masks are a small, pinned list of whole-token regexes, not a
-  general field parser.
+- Token masks are a small, pinned list of whole-token shapes with fixed
+  replacements, not a general field parser. A token the masks do not
+  cover generalizes by shared `key=` prefix or not at all.
 - Order-dependent. A different line order can give different clusters.
   The sample is committed, so runs are reproducible anyway.
 - Long lines with many variable tokens fall below the similarity
