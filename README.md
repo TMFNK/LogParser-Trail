@@ -14,6 +14,15 @@ models, Drain alternative.
 GitHub topics: `log-parsing` `template-mining` `audit-trail` `offline`
 `reproducibility` `small-language-models`
 
+## Project pipeline
+
+- **Tier A — [LogParser-Harness](https://github.com/TMFNK/LogParser-Harness):**
+  the reproducible Drain evaluation harness for LogHub-2k and SecOps-2k.
+- **Tier B — [LogParser-Dataset](https://github.com/TMFNK/LogParser-Dataset):**
+  the synthetic SecOps-2k dataset, grouping rules, and pinned Drain baseline.
+- **Tier C — this repository:** the deterministic-first parser, per-decision
+  audit trail, SecOps-2k results, and optional local-model review.
+
 ## One-command run
 
 ```bash
@@ -22,16 +31,33 @@ GitHub topics: `log-parsing` `template-mining` `audit-trail` `offline`
 
 Needs Python 3.12+ and [uv](https://docs.astral.sh/uv/). It builds the
 60-line sample, parses it, writes the audit trail, scores against
-ground truth, and writes `results/baseline.md`. Under a minute. If the
-Tier B checkout (`../LogParser-Dataset`) is present, it also scores
-SecOps-2k and appends that row.
+ground truth, checks `expected/sample_60.json`, writes
+`results/baseline.md`, then runs the test suite. Under a minute. If the
+Tier B checkout (`../LogParser-Dataset`) is present, it also parses
+SecOps-2k, appends the tight and loose rows to `results/baseline.md`,
+and runs the `scripts/verify_secops.py` gate.
+
+## What is pinned
+
+| Item                                                 | Where                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| Miner `st`, `anchor_tokens`, `length_slack`, `regex` | `configs/miner.yaml` (`st: 0.5`, 2 anchors, slack 1)       |
+| Sample seed and length                               | `scripts/make_sample.py` (seed 7, 60 lines, 8 templates)   |
+| Metric formulas                                      | `trailparse/metrics.py` (Jiang et al., ISSTA'24 §4.2)      |
+| Expected sample scores                               | `expected/sample_60.json` (GA/PA/FGA/FTA 1.0, 8 templates) |
+| SecOps-2k tight gate                                 | `scripts/verify_secops.py` (FGA ≥ 0.2947, FTA ≥ 0.2526)    |
+| Python deps                                          | `uv.lock`                                                  |
+| CI                                                   | `.github/workflows/reproduce.yml`                          |
+
+Each scored run also writes `results/raw/sample_scores.json` with
+GA/PA/FGA/FTA and template count.
 
 ## Layout
 
 ```text
 LogParser-Trail/
 ├── README.md CITATION.cff LICENSE NOTICE
-├── configs/miner.yaml      # pinned: st 0.5, 2 anchor tokens
+├── configs/miner.yaml      # pinned: st 0.5, 2 anchor tokens, slack 1
 ├── trailparse/
 │   ├── miner.py            # deterministic core (original code, no Drain copy)
 │   ├── audit.py            # JSONL writer + summary
@@ -46,11 +72,13 @@ LogParser-Trail/
 │   ├── parse.py            # log -> structured CSV + audit JSONL
 │   ├── score.py            # parsed CSV vs truth, four scores
 │   ├── verify_golden.py    # sample_60 GA/PA/FGA/FTA + template count
+│   ├── verify_secops.py    # SecOps-2k tight FGA/FTA gate
 │   └── lm_assist.py        # local review CLI; deterministic inputs stay immutable
 ├── expected/sample_60.json # CI golden for the 60-line sample
 ├── docs/DESIGN.md          # algorithm, audit schema, known limits
 ├── docs/PHASE2-LM.md       # local-model review contract
-├── results/                # committed sample run (parsed CSV, audit, table)
+├── results/                # committed sample run (parsed CSV, audit, baseline.md)
+│   └── raw/                # ignored scored JSON, SecOps outputs, LM reviews
 └── tests/
 ```
 
@@ -86,20 +114,26 @@ alias is `qwen3.8-2b-q6k`; override them with `--base-url` and `--model`.
 Only the literal `127.0.0.1` is accepted. The client bypasses environment
 proxies, rejects redirects, and sends requests one at a time. Use `--dry-run`
 to inspect candidates without contacting a model or writing outputs. The
-command aborts above 100 candidates unless `--max-candidates` is explicit,
-and refuses to replace an existing `*_lm.csv` unless `--force` is passed.
-`scripts/lm_assist.py` remains as a source-checkout compatibility wrapper.
+command aborts above 100 candidates unless `--max-candidates` is explicit.
+It refuses to replace an existing `*_lm.csv` unless `--force` is passed.
+`scripts/lm_assist.py` remains a source-checkout compatibility wrapper.
 
-## Scores
+## Metrics
 
-`seclog/metrics.py` in Tier B and `harness/metrics.py` in Tier A use
-the same formulas. Independent Apache-2.0 code in all three repos, no
-GPL eval copy anywhere.
+Independent Apache-2.0 code (`trailparse/metrics.py`, shared with
+TMFNK/LogParser-Harness and TMFNK/LogParser-Dataset). We do not copy Loghub-2.0
+`benchmark/evaluation/` (GPL-3). See `docs/DESIGN.md`.
+
+- **GA** — share of messages whose parsed group equals the ground-truth group
+- **PA** — share of messages whose template tokens match exactly
+- **FGA** — F1 of grouping accuracy at template level (rare and common templates equal)
+- **FTA** — F1 of exact template identification (one ground-truth template
+  per parsed template, with matching tokens)
 
 ## Manual steps
 
 ```bash
-uv sync --extra dev
+uv sync --frozen --extra dev
 uv run python scripts/make_sample.py
 uv run python scripts/parse.py --input examples/sample.log \
   --out-csv results/parsed_sample.csv --out-audit results/audit.jsonl
@@ -107,6 +141,7 @@ uv run python scripts/score.py --truth examples/sample_structured.csv \
   --parsed results/parsed_sample.csv \
   --out-json results/raw/sample_scores.json
 uv run python scripts/verify_golden.py
+uv run ruff check .
 uv run pytest -q
 ```
 
@@ -118,8 +153,42 @@ uv run python scripts/parse.py --input /path/to/private.log \
   --out-audit results/raw/private.audit.jsonl
 ```
 
+## Results
+
+See `results/baseline.md`. The 60-line sample is the CI golden
+(GA/PA/FGA/FTA 1.0, 8 templates). SecOps-2k tight and loose rows are
+appended only when the Tier B checkout is present; they also have to
+clear the `verify_secops.py` tight gate.
+
 ## License
 
 Apache-2.0, copyright 2026 MbitAI. See LICENSE and NOTICE.
 
-Need this applied to your own log pipelines? https://www.mbitai.com
+Need this applied to your own log pipelines? [MbitAI](https://www.mbitai.com)
+
+## Must-cite
+
+If you publish numbers from Trail, cite this software (see
+CITATION.cff) and the LogHub papers that defined its format and metrics:
+
+- Zhihan Jiang et al., "A Large-scale Evaluation for Log Parsing Techniques:
+  How Far are We?" ISSTA, 2024. [arXiv:2308.10828](https://arxiv.org/abs/2308.10828)
+- Jieming Zhu et al., "LogHub: A Large Collection of System Log Datasets for
+  AI-driven Log Analytics." ISSRE, 2023. [arXiv:2008.06448](https://arxiv.org/abs/2008.06448)
+
+## Limitations
+
+- Header split is syntactic only. Timestamps, pids, and hostnames are
+  dropped, not parsed. See `docs/DESIGN.md`.
+- Token masks are a small, pinned whole-token regex list, not a general
+  field parser.
+- Order-dependent. A different line order can give different clusters;
+  the committed sample keeps runs reproducible.
+- Long lines with many variable tokens can fall below the similarity
+  threshold and fragment (e.g. sudo COMMAND lines on SecOps-2k). The
+  fragmentation stays visible in the audit log.
+- The 60-line sample is the self-contained regression fixture. SecOps-2k
+  scoring runs only when the Tier B checkout sits next to this repo.
+- An accepted low-confidence split isolates the cited line; it does not
+  infer whether later members should follow it. Deterministic outputs
+  stay unchanged.
