@@ -158,7 +158,9 @@ uv run python scripts/parse.py --input /path/to/private.log \
 See `results/baseline.md`. The 60-line sample is the CI golden
 (GA/PA/FGA/FTA 1.0, 8 templates). SecOps-2k tight and loose rows are
 appended only when the Tier B checkout is present; they also have to
-clear the `verify_secops.py` tight gate.
+clear the `verify_secops.py` tight gate. Tight and loose FTA coincide:
+the loose ground truth differs in `EventId` only and FTA is computed
+over template strings.
 
 ## License
 

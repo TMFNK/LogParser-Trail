@@ -77,32 +77,44 @@ def fga(gt_ids: Sequence[object], parsed_ids: Sequence[object]) -> float:
     return _f1(n_c / n_p, n_c / n_g)
 
 
+def _correctly_identified_template_count(
+    gt_templates: Sequence[object], parsed_templates: Sequence[object]
+) -> int:
+    """N̂c: parsed templates whose messages share one ground-truth template."""
+    groundtruth_by_parsed: dict[tuple[str, ...], set[tuple[str, ...]]] = defaultdict(
+        set
+    )
+    for gt, parsed in zip(gt_templates, parsed_templates):
+        groundtruth_by_parsed[_normalize_template(parsed)].add(
+            _normalize_template(gt)
+        )
+    return sum(
+        groundtruth == {parsed}
+        for parsed, groundtruth in groundtruth_by_parsed.items()
+    )
+
+
 def fta(
     gt_ids: Sequence[object],
     parsed_ids: Sequence[object],
     gt_templates: Sequence[object],
     parsed_templates: Sequence[object],
 ) -> float:
-    """F1 of template accuracy (strictest LogHub-2.0 score)."""
+    """F1 of template accuracy (strictest LogHub-2.0 score).
+
+    A parsed template is correctly identified iff all of its messages
+    share one ground-truth template and its tokens match that template
+    (Jiang et al., ISSTA'24 §4.2.2). PTA = N̂c / N_p, RTA = N̂c / N_g.
+    """
     if not (
         len(gt_ids) == len(parsed_ids) == len(gt_templates) == len(parsed_templates)
     ):
         raise ValueError("all sequences must have the same length")
-    gt_groups = _group_indices(gt_ids)
-    parsed_groups = _group_indices(parsed_ids)
-    n_g, n_p = len(gt_groups), len(parsed_groups)
+    n_g = len({_normalize_template(template) for template in gt_templates})
+    n_p = len({_normalize_template(template) for template in parsed_templates})
     if n_g == 0 or n_p == 0:
         return 0.0
-    parsed_by_set = {s: True for s in parsed_groups.values()}
-    n_hat = 0
-    for gt_set in gt_groups.values():
-        if gt_set not in parsed_by_set:
-            continue
-        i = next(iter(gt_set))
-        if _normalize_template(gt_templates[i]) == _normalize_template(
-            parsed_templates[i]
-        ):
-            n_hat += 1
+    n_hat = _correctly_identified_template_count(gt_templates, parsed_templates)
     return _f1(n_hat / n_p, n_hat / n_g)
 
 

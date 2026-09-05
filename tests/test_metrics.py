@@ -39,3 +39,24 @@ def test_length_mismatch_raises():
         fga(["a"], [])
     with pytest.raises(ValueError):
         fta(["a"], ["a"], ["t"], ["t", "u"])
+
+
+def test_fta_counts_pure_split_with_matching_tokens():
+    # One ground-truth template split into two parsed clusters. Both
+    # clusters are pure and their tokens match, so the template counts
+    # once (Jiang et al., ISSTA'24 §4.2.2). Set-equality would score 0.
+    gt_ids = ["A", "A", "A"]
+    parsed_ids = ["x", "x", "y"]
+    gt_t = ["k <*>", "k <*>", "k <*>"]
+    parsed_t = ["k <*>", "k <*>", "k <*>"]
+    assert fta(gt_ids, parsed_ids, gt_t, parsed_t) == 1.0
+
+
+def test_fta_rejects_mixed_template():
+    # A parsed template spanning two ground-truth templates is not
+    # correctly identified, even though its tokens match one of them.
+    gt_ids = ["A", "B"]
+    parsed_ids = ["x", "x"]
+    gt_t = ["k <*>", "j <*>"]
+    parsed_t = ["k <*>", "k <*>"]
+    assert fta(gt_ids, parsed_ids, gt_t, parsed_t) == 0.0
