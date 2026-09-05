@@ -328,6 +328,22 @@ def test_apply_decisions_returns_separate_rows_for_merge_and_split():
     assert assisted[2]["ParameterList"] == "['events', 'c']"
 
 
+def test_apply_decisions_merge_keeps_key_aware_params():
+    source = [
+        row(1, "T1", "event user=root", "event user=root"),
+        row(2, "T2", "event user=admin", "event user=admin"),
+    ]
+
+    assisted = apply_decisions(
+        source, [{"change": "merge", "cluster_ids": ["T1", "T2"]}]
+    )
+
+    assert {item["EventId"] for item in assisted} == {"T1"}
+    assert assisted[0]["EventTemplate"] == "event user=<*>"
+    assert assisted[0]["ParameterList"] == "['root']"
+    assert assisted[1]["ParameterList"] == "['admin']"
+
+
 def test_apply_decisions_handles_overlapping_merges():
     source = [
         row(1, "T1", "event one", "event one"),

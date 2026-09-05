@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from trailparse.lm import PROMPT_VERSION, LocalModelClient
-from trailparse.miner import WILDCARD, merge
+from trailparse.miner import Cluster, Miner, merge
 
 LOW_SIMILARITY = 0.7
 MAX_EXAMPLES = 3
@@ -491,11 +491,10 @@ def apply_decisions(rows: list[dict], reviews: list[dict]) -> list[dict]:
         merged = merged_templates[root]
         row["EventId"] = root
         row["EventTemplate"] = " ".join(merged)
+        # Same extraction as the deterministic parse: bare, key-aware
+        # (user=<*>), and compound (<*>(uid=<*>)) positions each yield
+        # one entry per <*> occurrence.
         row["ParameterList"] = repr(
-            [
-                tok
-                for tok, tmpl in zip(row["Content"].split(), merged)
-                if tmpl == WILDCARD
-            ]
+            Miner.params_for(row["Content"], Cluster(cid=root, template=merged))
         )
     return out

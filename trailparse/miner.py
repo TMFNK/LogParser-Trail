@@ -219,7 +219,8 @@ class Miner:
     def template_of(self, cluster: Cluster) -> str:
         return " ".join(cluster.template)
 
-    def params_for(self, raw: str, cluster: Cluster) -> list[str]:
+    @staticmethod
+    def params_for(raw: str, cluster: Cluster) -> list[str]:
         """Values filling each ``<*>`` of the cluster template, in order.
 
         A bare ``<*>`` position yields the whole raw token; a compound

@@ -67,6 +67,19 @@ The command aborts above 100 candidates by default; raising
 `--max-candidates` is explicit. Existing assisted CSVs are preserved unless
 `--force` is passed. Review JSONL always remains append-only.
 
+### File naming
+
+One stem per assist run, under ignored `results/raw/`:
+
+- `<stem>.lm-review.jsonl` — append-only reviews (enforced suffix)
+- `<stem>_lm.csv` — assisted CSV (enforced suffix)
+- `<stem>_lm_tight.json` / `<stem>_lm_loose.json` — scores of the assisted CSV
+
+Established stems: `secops` (v1: `secops.lm-review.jsonl`, `secops_lm.csv`)
+and `secops_v2` (v2 review file uses a historical dash,
+`secops-v2.lm-review.jsonl`, alongside `secops_v2_lm.csv`). New runs use
+underscores throughout (`<stem>` + `_lm.csv`), matching what the CLI enforces.
+
 ## Model
 
 Small and local. Qwen3-class 2–4B quant, CPU-served, one request at a
