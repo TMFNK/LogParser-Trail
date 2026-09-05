@@ -187,8 +187,11 @@ CITATION.cff) and the LogHub papers that defined its format and metrics:
 - Long lines with many variable tokens can fall below the similarity
   threshold and fragment (e.g. sudo COMMAND lines on SecOps-2k). The
   fragmentation stays visible in the audit log.
-- The 60-line sample is the self-contained regression fixture. SecOps-2k
-  scoring runs only when the Tier B checkout sits next to this repo.
+- The 60-line sample is the self-contained regression fixture: it needs
+  nothing else. SecOps-2k scoring additionally needs a `LogParser-Dataset`
+  checkout next to this repo, so that
+  `../LogParser-Dataset/dataset/SecOps_2k.log` exists. `reproduce.sh`
+  detects it automatically and skips that section otherwise.
 - An accepted low-confidence split isolates the cited line; it does not
   infer whether later members should follow it. Deterministic outputs
   stay unchanged.
