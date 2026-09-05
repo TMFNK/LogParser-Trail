@@ -32,4 +32,39 @@ if [ -f ../LogParser-Dataset/dataset/SecOps_2k.log ]; then
 else
   echo "(skip SecOps-2k: ../LogParser-Dataset not found)"
 fi
+
+# Optional local-model assist: ./reproduce.sh --lm lists candidates without
+# a server (--dry-run) and runs the full v2 review + scoring only when a
+# local OpenAI-compatible server answers on 127.0.0.1:8090.
+if [ "${1:-}" = "--lm" ]; then
+  if [ ! -f results/raw/secops_parsed.csv ] || [ ! -f results/raw/secops_audit.jsonl ]; then
+    echo "(skip LM assist: results/raw/secops_parsed.csv not found; needs Tier B checkout)"
+  else
+    echo "--- LM assist candidates (dry-run, no server needed) ---"
+    uv run trail-lm-assist \
+      --csv results/raw/secops_parsed.csv \
+      --audit results/raw/secops_audit.jsonl \
+      --review results/raw/secops-v2.lm-review.jsonl --dry-run
+    if curl -s -m 5 http://127.0.0.1:8090/v1/models > /dev/null 2>&1; then
+      echo "--- LM assist review (trail-lm-v2, local server found) ---"
+      uv run trail-lm-assist \
+        --csv results/raw/secops_parsed.csv \
+        --audit results/raw/secops_audit.jsonl \
+        --review results/raw/secops-v2.lm-review.jsonl \
+        --out-csv results/raw/secops_v2_lm.csv --force
+      uv run python scripts/score.py \
+        --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured.csv \
+        --parsed results/raw/secops_v2_lm.csv \
+        --label "SecOps-2k tight + LM v2" \
+        --out-json results/raw/secops_v2_tight.json
+      uv run python scripts/score.py \
+        --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured_loose.csv \
+        --parsed results/raw/secops_v2_lm.csv \
+        --label "SecOps-2k loose + LM v2" \
+        --out-json results/raw/secops_v2_loose.json
+    else
+      echo "(skip LM review: no server on 127.0.0.1:8090; start e.g. llama-server -m Qwen3.8-2B-Q6_K.gguf --host 127.0.0.1 --port 8090)"
+    fi
+  fi
+fi
 echo "reproduce OK"

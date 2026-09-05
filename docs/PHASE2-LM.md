@@ -22,8 +22,13 @@ human or a threshold accepts them. Nothing parses without a trail.
    clusters whose final templates have token-level edit distance one.
 3. Send each candidate that has 3 distinct example lines to a local small model
    over an OpenAI-compatible endpoint (`127.0.0.1`, same pattern as
-   the Tier A harness server script). Ask one question: same event or
-   two? No log leaves the machine.
+   the Tier A harness server script). Prompt version `trail-lm-v2` sends a
+   short judge preamble before the question: SAME/TWO definitions (variable-
+   only diff vs different action/outcome), SecOps rules (Accepted vs Failed,
+   BLOCK vs ALLOW, TCP vs UDP/ICMP are TWO; IP/port/pid/user-only diffs are
+   SAME; unsure defaults to SAME), one SAME and one TWO counterexample, and
+   the miner similarity for low-confidence joins. Then ask one question:
+   same event or two? No log leaves the machine.
 4. Append the proposal, cited audit lines, affected-line count, model identity, prompt version,
    raw response, and accept/reject/needs-human reason to `*.lm-review.jsonl`.
 5. If accepted decisions are applied, write a new assisted CSV. Do not
@@ -52,8 +57,11 @@ deadline.
 
 Each review record uses schema `lm-review-v1` and contains the candidate kind,
 cluster ids, cited audit lines, examples, templates, source-file SHA-256
-digests, prompt version, exact request, model identity, raw response, parsed
-proposal, decision, change, and reason.
+digests, prompt version (`trail-lm-v2`; schema version is independent of
+prompt version), exact request, model identity, raw response, parsed
+proposal, decision, change, and reason. Review records embed raw log
+`Content` as examples and are as sensitive as the parse audit: keep them
+under ignored `results/raw/`.
 
 The command aborts above 100 candidates by default; raising
 `--max-candidates` is explicit. Existing assisted CSVs are preserved unless

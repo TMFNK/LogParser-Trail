@@ -211,29 +211,56 @@ cluster equals that coarse set.
 
 ### Deterministic baseline
 
-| Run | GA | PA | FGA | FTA | Templates |
-|---|---|---|---|---|---|
-| sample (60 lines, 8 templates) | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 8 |
-| SecOps-2k tight (25) | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26 |
-| SecOps-2k loose (10) | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26 |
+| Run                            | GA     | PA     | FGA    | FTA    | Templates |
+| ------------------------------ | ------ | ------ | ------ | ------ | --------- |
+| sample (60 lines, 8 templates) | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 8         |
+| SecOps-2k tight (25)           | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26        |
+| SecOps-2k loose (10)           | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26        |
 
 Source: `results/raw/sample_scores.json`,
 `results/raw/trail_secops_tight.json`.
 
 ### Local-model assist (Qwen3.8-2B-Q6_K, 16 SecOps-2k candidates)
 
-| Run | GA | PA | FGA | FTA | Templates |
-|---|---|---|---|---|---|
-| tight + `trail-lm-v1` (2 bad accepts: T3 split, T7+T11 merge) | 0.6820 | 0.8865 | 0.7451 | 0.7843 | 26 |
-| loose + `trail-lm-v1` | 0.0340 | 0.8865 | 0.1111 | 0.7843 | 26 |
-| tight + `trail-lm-v2` (0 auto-applies, 3 held as `needs-human`) | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26 |
-| loose + `trail-lm-v2` | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26 |
+| Run                                                             | GA     | PA     | FGA    | FTA    | Templates |
+| --------------------------------------------------------------- | ------ | ------ | ------ | ------ | --------- |
+| tight + `trail-lm-v1` (2 bad accepts: T3 split, T7+T11 merge)   | 0.6820 | 0.8865 | 0.7451 | 0.7843 | 26        |
+| loose + `trail-lm-v1`                                           | 0.0340 | 0.8865 | 0.1111 | 0.7843 | 26        |
+| tight + `trail-lm-v2` (0 auto-applies, 3 held as `needs-human`) | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26        |
+| loose + `trail-lm-v2`                                           | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26        |
 
-Source: `results/raw/secops_lm_tight.json`,
+Committed source: `results/lm_scores.json`. Local-only detail:
+`results/raw/secops_lm_tight.json`,
 `results/raw/secops_lm_loose.json`, `results/raw/secops_v2_tight.json`,
 `results/raw/secops_v2_loose.json`. Reviews:
 `results/raw/secops.lm-review.jsonl` (v1),
 `results/raw/secops-v2.lm-review.jsonl` (v2).
+
+> Note: everything under `results/raw/` is gitignored and local-only.
+> The committed, verifiable summary is `results/lm_scores.json`.
+> To regenerate the table, serve the model locally and rerun the
+> assist (needs the Tier B checkout for SecOps-2k inputs):
+>
+> ```bash
+> llama-server -m Qwen3.8-2B-Q6_K.gguf --host 127.0.0.1 --port 8090
+> uv run trail-lm-assist \
+>   --csv results/raw/secops_parsed.csv \
+>   --audit results/raw/secops_audit.jsonl \
+>   --review results/raw/secops-v2.lm-review.jsonl \
+>   --out-csv results/raw/secops_v2_lm.csv
+> uv run python scripts/score.py \
+>   --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured.csv \
+>   --parsed results/raw/secops_v2_lm.csv \
+>   --out-json results/raw/secops_v2_tight.json
+> uv run python scripts/score.py \
+>   --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured_loose.csv \
+>   --parsed results/raw/secops_v2_lm.csv \
+>   --out-json results/raw/secops_v2_loose.json
+> ```
+>
+> Review logs (`*.lm-review.jsonl`) embed raw log `Content` as examples
+> and are as sensitive as the audit trail: keep them under
+> `results/raw/`.
 
 Reading: v1 degraded the parse (GA 0.967 → 0.682) through two false
 accepts. v2 (definitions, SecOps rules, counterexamples, unsure→SAME)
