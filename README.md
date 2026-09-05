@@ -307,10 +307,38 @@ Apache-2.0, copyright 2026 MbitAI. See LICENSE and NOTICE.
 
 Need this applied to your own log pipelines? [MbitAI](https://www.mbitai.com)
 
-## Must-cite
+## Cite this (Zenodo)
 
-If you publish numbers from Trail, cite this software (see
-CITATION.cff) and the LogHub papers that defined its format and metrics:
+If you use Trail or publish numbers from it, please cite the archived release:
+
+> MbitAI. (2026). *LogParser-Trail* (v0.2.1). Zenodo.
+> https://doi.org/10.5281/zenodo.22341504
+
+| | |
+| --- | --- |
+| This version | [10.5281/zenodo.22341504](https://doi.org/10.5281/zenodo.22341504) |
+| All versions (concept DOI) | [10.5281/zenodo.22341503](https://doi.org/10.5281/zenodo.22341503) |
+| GitHub tag | [`v0.2.1`](https://github.com/TMFNK/LogParser-Trail/releases/tag/v0.2.1) |
+| Record | https://zenodo.org/records/22341504 |
+
+Also see [`CITATION.cff`](CITATION.cff).
+
+```bibtex
+@software{mbitai_2026_logparser_trail,
+  author       = {MbitAI},
+  title        = {LogParser-Trail},
+  month        = sep,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {v0.2.1},
+  doi          = {10.5281/zenodo.22341504},
+  url          = {https://doi.org/10.5281/zenodo.22341504},
+}
+```
+
+## Must-cite (LogHub papers)
+
+Also cite the LogHub papers that defined the format and metrics:
 
 - Zhihan Jiang et al., "A Large-scale Evaluation for Log Parsing Techniques:
   How Far are We?" ISSTA, 2024. [arXiv:2308.10828](https://arxiv.org/abs/2308.10828)

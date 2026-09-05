@@ -5,6 +5,7 @@ version: 0.2.1
 date-released: "2026-09-05"
 license: Apache-2.0
 repository-code: https://github.com/TMFNK/LogParser-Trail
+url: https://doi.org/10.5281/zenodo.22341504
 identifiers:
   - type: doi
     value: 10.5281/zenodo.22341504
