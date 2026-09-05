@@ -20,7 +20,7 @@ try:
 except ImportError:  # Windows still gets the process-wide thread lock.
     LOCK_EX = LOCK_UN = flock = None
 
-PROMPT_VERSION = "trail-lm-v1"
+PROMPT_VERSION = "trail-lm-v2"
 DEFAULT_BASE_URL = "http://127.0.0.1:8090/v1"
 DEFAULT_MODEL = "qwen3.8-2b-q6k"
 MAX_RESPONSE_BYTES = 1024 * 1024

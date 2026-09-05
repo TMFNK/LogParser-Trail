@@ -194,6 +194,12 @@ def test_prompt_and_response_contract():
 
     assert "Reply with one word: SAME or TWO." in prompt
     assert "1. event a" in prompt
+    # v2 prompt carries definitions, rules, and counterexamples for the SLM.
+    assert "SAME means one event type" in prompt
+    assert "TWO means different event types" in prompt
+    assert "Accepted vs Failed" in prompt
+    assert "Example SAME:" in prompt
+    assert "Example TWO:" in prompt
     assert parse_same_or_two("<think>reasoning</think>SAME") == "SAME"
     assert parse_same_or_two("<think>SAME") is None
     assert parse_same_or_two("SAME or TWO") is None
@@ -247,7 +253,7 @@ def test_review_contains_request_response_identity_citations_and_digests():
     assert review["schema"] == "lm-review-v1"
     assert review["cited_audit_lines"] == [2, 1, 3]
     assert review["model"] == "test-model"
-    assert review["prompt_version"] == "trail-lm-v1"
+    assert review["prompt_version"] == "trail-lm-v2"
     assert review["response"]["parsed"] == "TWO"
     assert review["decision"] == "accept"
     assert review["change"] == "split"

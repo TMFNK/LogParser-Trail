@@ -199,14 +199,47 @@ uv run python scripts/parse.py --input /path/to/private.log \
 
 ## Results
 
-See `results/baseline.md`. The 60-line sample is the CI golden
-(GA/PA/FGA/FTA 1.0, 8 templates). SecOps-2k tight and loose rows are
-appended only when the Tier B checkout is present; they also have to
-clear the `verify_secops.py` tight gate. Tight and loose FTA coincide:
-the loose ground truth differs in `EventId` only and FTA is computed
-over template strings. Loose GA stays low by construction: `L_FW_BLOCK`
-spans TCP/UDP/ICMP while the parser splits protocols on the `PROTO`
-identity key, so no parsed cluster equals that coarse set.
+See `results/baseline.md` for the deterministic baseline. The 60-line
+sample is the CI golden (GA/PA/FGA/FTA 1.0, 8 templates). SecOps-2k
+tight and loose rows are appended only when the Tier B checkout is
+present; they also have to clear the `verify_secops.py` tight gate.
+Tight and loose FTA coincide: the loose ground truth differs in
+`EventId` only and FTA is computed over template strings. Loose GA
+stays low by construction: `L_FW_BLOCK` spans TCP/UDP/ICMP while the
+parser splits protocols on the `PROTO` identity key, so no parsed
+cluster equals that coarse set.
+
+### Deterministic baseline
+
+| Run | GA | PA | FGA | FTA | Templates |
+|---|---|---|---|---|---|
+| sample (60 lines, 8 templates) | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 8 |
+| SecOps-2k tight (25) | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26 |
+| SecOps-2k loose (10) | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26 |
+
+Source: `results/raw/sample_scores.json`,
+`results/raw/trail_secops_tight.json`.
+
+### Local-model assist (Qwen3.8-2B-Q6_K, 16 SecOps-2k candidates)
+
+| Run | GA | PA | FGA | FTA | Templates |
+|---|---|---|---|---|---|
+| tight + `trail-lm-v1` (2 bad accepts: T3 split, T7+T11 merge) | 0.6820 | 0.8865 | 0.7451 | 0.7843 | 26 |
+| loose + `trail-lm-v1` | 0.0340 | 0.8865 | 0.1111 | 0.7843 | 26 |
+| tight + `trail-lm-v2` (0 auto-applies, 3 held as `needs-human`) | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26 |
+| loose + `trail-lm-v2` | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26 |
+
+Source: `results/raw/secops_lm_tight.json`,
+`results/raw/secops_lm_loose.json`, `results/raw/secops_v2_tight.json`,
+`results/raw/secops_v2_loose.json`. Reviews:
+`results/raw/secops.lm-review.jsonl` (v1),
+`results/raw/secops-v2.lm-review.jsonl` (v2).
+
+Reading: v1 degraded the parse (GA 0.967 → 0.682) through two false
+accepts. v2 (definitions, SecOps rules, counterexamples, unsure→SAME)
+rejects the T3 split and holds the T7+T11 merge for human review, so
+the assisted CSV is identical to the deterministic parse. The harness
+holds uncertain big-blast-radius cases instead of auto-applying them.
 
 ## License
 

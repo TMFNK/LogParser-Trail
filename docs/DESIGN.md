@@ -79,7 +79,11 @@ when three distinct cited example lines are available. Before selection, the
 reader requires identical line sets, matching cluster ids, and matching final
 templates in the paired artifacts.
 
-Prompt version `trail-lm-v1` asks for exactly `SAME` or `TWO`. For a
+Prompt version `trail-lm-v2` asks for exactly `SAME` or `TWO` after a short
+judge preamble: SAME/TWO definitions, SecOps rules (Accepted vs Failed,
+BLOCK vs ALLOW, TCP vs UDP/ICMP are TWO; IP/port/pid/user-only diffs are
+SAME; unsure defaults to SAME), one SAME and one TWO counterexample, and
+the miner similarity for low-confidence joins. For a
 low-confidence join, example 1 is identified as the target and `TWO` accepts
 splitting it. For an equal-length near-duplicate pair, `SAME` accepts merging
 the clusters. Unequal-length merges and components containing an explicit
