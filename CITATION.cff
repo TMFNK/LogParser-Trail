@@ -1,10 +1,17 @@
 cff-version: 1.2.0
 message: Cite this software if you use the Trail parser or its audit trail format.
 title: LogParser-Trail
-version: 0.2.0
+version: 0.2.1
 date-released: "2026-09-05"
 license: Apache-2.0
 repository-code: https://github.com/TMFNK/LogParser-Trail
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22341504
+    description: This version
+  - type: doi
+    value: 10.5281/zenodo.22341503
+    description: All versions
 authors:
   - name: MbitAI
     website: https://www.mbitai.com

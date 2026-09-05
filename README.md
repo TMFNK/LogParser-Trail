@@ -1,5 +1,7 @@
 # LogParser-Trail
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22341504.svg)](https://doi.org/10.5281/zenodo.22341504)
+
 Trail is a deterministic-first log template miner. Each parsed line gets
 a template and a receipt: one audit record per decision, so any
 template traces back to the exact lines and merges that built it.
