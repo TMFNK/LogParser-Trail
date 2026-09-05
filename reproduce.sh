@@ -36,7 +36,16 @@ fi
 # Optional local-model assist: ./reproduce.sh --lm lists candidates without
 # a server (--dry-run) and runs the full v2 review + scoring only when a
 # local OpenAI-compatible server answers on 127.0.0.1:8090.
-if [ "${1:-}" = "--lm" ]; then
+# Review JSONL is append-only: rm results/raw/secops-v2.lm-review.jsonl
+# for a clean re-run, otherwise this appends 16 duplicate lines.
+LM_REQUESTED=0
+for arg in ${@+"$@"}; do
+  if [ "$arg" = "--lm" ]; then
+    LM_REQUESTED=1
+    break
+  fi
+done
+if [ "$LM_REQUESTED" = 1 ]; then
   if [ ! -f results/raw/secops_parsed.csv ] || [ ! -f results/raw/secops_audit.jsonl ]; then
     echo "(skip LM assist: results/raw/secops_parsed.csv not found; needs Tier B checkout)"
   else
@@ -45,7 +54,7 @@ if [ "${1:-}" = "--lm" ]; then
       --csv results/raw/secops_parsed.csv \
       --audit results/raw/secops_audit.jsonl \
       --review results/raw/secops-v2.lm-review.jsonl --dry-run
-    if curl -s -m 5 http://127.0.0.1:8090/v1/models > /dev/null 2>&1; then
+    if curl --noproxy '*' -s -m 5 http://127.0.0.1:8090/v1/models > /dev/null 2>&1; then
       echo "--- LM assist review (trail-lm-v2, local server found) ---"
       uv run trail-lm-assist \
         --csv results/raw/secops_parsed.csv \

@@ -6,7 +6,9 @@ template traces back to the exact lines and merges that built it.
 
 The deterministic miner remains the parser of record. An optional local-model
 assist reviews low-confidence joins and near-duplicate templates without
-changing the parse CSV or audit JSONL. No scores on this page involve a model.
+changing the parse CSV or audit JSONL. No scores in the deterministic
+baseline involve a model; the local-model assist table below is scored
+separately.
 
 Keywords: log parsing, template mining, audit trail, offline, small language
 models, Drain alternative.
@@ -247,22 +249,28 @@ Committed source: `results/lm_scores.json`. Local-only detail:
 > Note: everything under `results/raw/` is gitignored and local-only.
 > The committed, verifiable summary is `results/lm_scores.json`.
 > To regenerate the table, serve the model locally and rerun the
-> assist (needs the Tier B checkout for SecOps-2k inputs):
+> assist (needs the Tier B checkout for SecOps-2k inputs).
+> The review JSONL is append-only: delete it first, otherwise a
+> re-run appends 16 duplicate lines. `--force` is needed when the
+> assisted CSV already exists:
 >
 > ```bash
 > llama-server -m Qwen3.8-2B-Q6_K.gguf --host 127.0.0.1 --port 8090
+> rm -f results/raw/secops-v2.lm-review.jsonl
 > uv run trail-lm-assist \
 >   --csv results/raw/secops_parsed.csv \
 >   --audit results/raw/secops_audit.jsonl \
 >   --review results/raw/secops-v2.lm-review.jsonl \
->   --out-csv results/raw/secops_v2_lm.csv
+>   --out-csv results/raw/secops_v2_lm.csv --force
 > uv run python scripts/score.py \
 >   --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured.csv \
 >   --parsed results/raw/secops_v2_lm.csv \
+>   --label "SecOps-2k tight + LM v2" \
 >   --out-json results/raw/secops_v2_tight.json
 > uv run python scripts/score.py \
 >   --truth ../LogParser-Dataset/dataset/SecOps_2k.log_structured_loose.csv \
 >   --parsed results/raw/secops_v2_lm.csv \
+>   --label "SecOps-2k loose + LM v2" \
 >   --out-json results/raw/secops_v2_loose.json
 > ```
 >

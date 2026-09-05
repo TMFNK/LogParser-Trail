@@ -51,6 +51,12 @@ class Candidate:
 
 
 def token_edit_distance(left: list[str], right: list[str]) -> int:
+    """Token-level Levenshtein distance (substitution/insert/delete = 1).
+
+    Reference definition for near-duplicate: two templates are candidates
+    iff this returns 1. `_near_duplicate_pairs` finds the same set via a
+    signature index for speed and rechecks with this function.
+    """
     prev = list(range(len(right) + 1))
     for i, tok in enumerate(left, start=1):
         cur = [i]
@@ -162,13 +168,21 @@ def _validate_pair(records: list[dict], rows: list[dict]) -> dict[int, dict]:
 def _near_duplicate_pairs(
     templates: dict[str, str], max_pairs: int
 ) -> list[tuple[str, str]]:
+    """Pairs whose final templates have token edit distance one.
+
+    Signature index (substitution + single-token delete) proposes pairs;
+    `token_edit_distance` confirms distance 1 so the two stay in sync.
+    """
     def sort_key(cid: str) -> int:
         return int(cid[1:])
 
+    tokenized = {cid: tuple(template.split()) for cid, template in templates.items()}
     pairs: set[tuple[str, str]] = set()
 
     def add_pair(left: str, right: str) -> None:
         if left == right:
+            return
+        if token_edit_distance(list(tokenized[left]), list(tokenized[right])) != 1:
             return
         pair = tuple(sorted((left, right), key=sort_key))
         if pair in pairs:
@@ -180,7 +194,6 @@ def _near_duplicate_pairs(
                 "raise --max-candidates explicitly"
             )
 
-    tokenized = {cid: tuple(template.split()) for cid, template in templates.items()}
     substitutions: dict[tuple, list[str]] = defaultdict(list)
     for cid, tokens in tokenized.items():
         for i in range(len(tokens)):
@@ -282,7 +295,7 @@ def build_prompt(candidate: Candidate) -> str:
     if candidate.similarity is not None:
         similarity_line = (
             f"\nMiner similarity for the join: {candidate.similarity:.4f} "
-            "(below 0.70, hence this review).\n"
+            f"(below {LOW_SIMILARITY:.2f}, hence this review).\n"
         )
     return (
         "You are a log template judge. Decide if log lines share one event template.\n"

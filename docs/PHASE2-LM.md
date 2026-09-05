@@ -65,7 +65,8 @@ under ignored `results/raw/`.
 
 The command aborts above 100 candidates by default; raising
 `--max-candidates` is explicit. Existing assisted CSVs are preserved unless
-`--force` is passed. Review JSONL always remains append-only.
+`--force` is passed. Review JSONL always remains append-only: delete it
+for a clean re-run, otherwise a second run appends duplicate lines.
 
 ### File naming
 
@@ -78,7 +79,9 @@ One stem per assist run, under ignored `results/raw/`:
 Established stems: `secops` (v1: `secops.lm-review.jsonl`, `secops_lm.csv`)
 and `secops_v2` (v2 review file uses a historical dash,
 `secops-v2.lm-review.jsonl`, alongside `secops_v2_lm.csv`). New runs use
-underscores throughout (`<stem>` + `_lm.csv`), matching what the CLI enforces.
+underscores throughout (`<stem>` + `_lm.csv`) by convention; the CLI only
+enforces the suffixes (`.lm-review.jsonl`, `_lm.csv`), so a dash stem
+still passes validation.
 
 ## Model
 
