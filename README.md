@@ -214,8 +214,16 @@ cluster equals that coarse set.
 | Run                            | GA     | PA     | FGA    | FTA    | Templates |
 | ------------------------------ | ------ | ------ | ------ | ------ | --------- |
 | sample (60 lines, 8 templates) | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 8         |
-| SecOps-2k tight (25)           | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26        |
-| SecOps-2k loose (10)           | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26        |
+| SecOps-2k tight (25), Trail    | 0.9670 | 0.9670 | 0.8627 | 0.8627 | 26        |
+| SecOps-2k tight (25), Drain    | 0.7720 | 0.6945 | 0.2947 | 0.2526 | 70        |
+| SecOps-2k loose (10), Trail    | 0.0340 | 0.9670 | 0.1111 | 0.8627 | 26        |
+| SecOps-2k loose (10), Drain    | 0.0475 | 0.6945 | 0.0500 | 0.2526 | 70        |
+
+Drain rows are the pinned Tier B baseline
+(`../LogParser-Dataset/expected/drain_secops_2k.json`, Drain st=0.5
+depth=4): 70 parsed templates against 25 tight truth templates, versus
+Trail's 26. The `verify_secops.py` gate (FGA ≥ 0.2947, FTA ≥ 0.2526) is
+that Drain score — Trail clears it at 0.8627 / 0.8627.
 
 Source: `results/raw/sample_scores.json`,
 `results/raw/trail_secops_tight.json`.

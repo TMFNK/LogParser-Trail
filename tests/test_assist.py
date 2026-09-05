@@ -12,6 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from trailparse.assist import (  # noqa: E402
+    DEFAULT_MAX_CANDIDATES,
+    LOW_SIMILARITY,
+    MAX_AUTO_AFFECTED,
+    MAX_EXAMPLES,
     Candidate,
     append_review,
     apply_decisions,
@@ -54,6 +58,15 @@ def row(line_id, event_id, template, content):
         "EventTemplate": template,
         "ParameterList": "[]",
     }
+
+
+def test_review_thresholds_are_pinned():
+    # Chosen once, not tuned per run. A deliberate change here must also
+    # refresh results/lm_scores.json and the README LM table.
+    assert LOW_SIMILARITY == 0.7
+    assert MAX_EXAMPLES == 3
+    assert MAX_AUTO_AFFECTED == 10
+    assert DEFAULT_MAX_CANDIDATES == 100
 
 
 def test_token_edit_distance_handles_replace_insert_and_delete():

@@ -14,7 +14,14 @@ from pathlib import Path
 from trailparse.lm import PROMPT_VERSION, LocalModelClient
 from trailparse.miner import Cluster, Miner, merge
 
+# Review thresholds: chosen once, not tuned per run. Changing any of them
+# reshapes the candidate set, so the pin test in tests/test_assist.py must
+# be updated deliberately alongside results/lm_scores.json.
+# LOW_SIMILARITY: miner joins below 0.7 are worth a second opinion; at or
+# above it the deterministic join stands without review.
 LOW_SIMILARITY = 0.7
+# MAX_EXAMPLES: exactly 3 distinct cited lines per candidate — the target
+# plus two peers (or one per side plus a third for pairs). Fewer is not sent.
 MAX_EXAMPLES = 3
 DEFAULT_MAX_CANDIDATES = 100
 # Auto-apply ceiling: a model accept touching more lines than this is

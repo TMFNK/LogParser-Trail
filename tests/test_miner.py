@@ -2,6 +2,7 @@
 # Copyright 2026 MbitAI — see NOTICE for attribution.
 """Miner core: determinism, anchor rule, merge behavior."""
 
+import random
 import sys
 from pathlib import Path
 
@@ -39,6 +40,26 @@ def test_deterministic():
     a, b = run(LINES), run(LINES)
     assert [c.template for c in a.clusters] == [c.template for c in b.clusters]
     assert [d.cluster for d in a.decisions] == [d.cluster for d in b.decisions]
+
+
+def test_shuffled_order_keeps_audit_well_formed():
+    # The miner is order-dependent by design: templates only generalize, so
+    # arrival order shapes clusters. Whatever the order, the audit must stay
+    # a complete receipt: one decision per line, every cluster non-empty.
+    repeated = LINES * 3
+    shuffled = repeated[:]
+    random.Random(7).shuffle(shuffled)
+
+    first, second = run(shuffled), run(shuffled)
+
+    assert [d.cluster for d in first.decisions] == [
+        d.cluster for d in second.decisions
+    ]
+    assert sorted(d.line_id for d in first.decisions) == list(
+        range(1, len(shuffled) + 1)
+    )
+    assert first.decisions and all(c.count > 0 for c in first.clusters)
+    assert sum(c.count for c in first.clusters) == len(shuffled)
 
 
 def test_outcomes_stay_apart():
