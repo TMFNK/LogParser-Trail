@@ -39,15 +39,15 @@ and runs the `scripts/verify_secops.py` gate.
 
 ## What is pinned
 
-| Item                                                 | Where                                                      |
-| ---------------------------------------------------- | ---------------------------------------------------------- |
-| Miner `st`, `anchor_tokens`, `length_slack`, `regex`, `identity_keys` | `configs/miner.yaml` (`st: 0.5`, 2 anchors, slack 1) |
-| Sample seed and length                               | `scripts/make_sample.py` (seed 7, 60 lines, 8 templates)   |
-| Metric formulas                                      | `trailparse/metrics.py` (Jiang et al., ISSTA'24 §4.2)      |
-| Expected sample scores                               | `expected/sample_60.json` (GA/PA/FGA/FTA 1.0, 8 templates) |
-| SecOps-2k tight gate                                 | `scripts/verify_secops.py` (FGA ≥ 0.2947, FTA ≥ 0.2526)    |
-| Python deps                                          | `uv.lock`                                                  |
-| CI                                                   | `.github/workflows/reproduce.yml`                          |
+| Item                                                                  | Where                                                      |
+| --------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Miner `st`, `anchor_tokens`, `length_slack`, `regex`, `identity_keys` | `configs/miner.yaml` (`st: 0.5`, 2 anchors, slack 1)       |
+| Sample seed and length                                                | `scripts/make_sample.py` (seed 7, 60 lines, 8 templates)   |
+| Metric formulas                                                       | `trailparse/metrics.py` (Jiang et al., ISSTA'24 §4.2)      |
+| Expected sample scores                                                | `expected/sample_60.json` (GA/PA/FGA/FTA 1.0, 8 templates) |
+| SecOps-2k tight gate                                                  | `scripts/verify_secops.py` (FGA ≥ 0.2947, FTA ≥ 0.2526)    |
+| Python deps                                                           | `uv.lock`                                                  |
+| CI                                                                    | `.github/workflows/reproduce.yml`                          |
 
 Each scored run also writes `results/raw/sample_scores.json` with
 GA/PA/FGA/FTA and template count.
@@ -109,7 +109,38 @@ llama-server -m Qwen3.8-2B-Q6_K.gguf --host 127.0.0.1 --port 8090
 
 The default `--model` alias is `qwen3.8-2b-q6k` (Qwen3.8-2B distill,
 Q6_K, about 2 GB of weights). It runs on CPU: 16 SecOps-2k candidates
-take a few minutes after a short model load. Then run:
+take a few minutes after a short model load.
+
+A small local model is enough here because the job is small. The
+deterministic miner does the parsing; the model only answers one
+question per candidate, SAME or TWO, with the audit lines cited. The
+candidate set numbers in the dozens, not thousands, so a 2B quant on
+CPU covers it. Nothing parsed leaves the machine, which matters
+because audit records can carry secrets (see above). No cloud account,
+no per-token bill, no data-protection addendum.
+
+Qwen fits because the rest of the MbitAI stack already runs on it.
+[Local-SLM-Data-Cleaner](https://github.com/TMFNK/Local-SLM-Data-Cleaner)
+fine-tunes Qwen3-0.6B into a master-data cleaner that runs on the same
+kind of Mac: synthetic training data, GGUF served by llama.cpp,
+deterministic core with an append-only audit trail and a review queue
+for uncertain cases. Trail reuses that shape for log templates, one
+size up (2B for judgment calls instead of 0.6B for field
+normalization). The weights are Apache-2.0, which keeps this tree
+license-clean for the same reason the metric code was reimplemented
+instead of copied. The client already strips Qwen `<think>` blocks
+before parsing the verdict.
+
+Any OpenAI-compatible local model can be swapped in with `--base-url`
+and `--model`. The contract is two words: reply with one unambiguous
+SAME or TWO; anything else is recorded as a rejection and never
+applied. The observed run (14 of 16 SecOps-2k verdicts sensible, 2 bad
+accepts) is what the `needs-human` hold rule below exists to contain,
+and it holds regardless of model. Companies that prefer a European
+base model can follow the cleaner precedent (Ministral, Teuken,
+EuroLLM) with the same loop and the same review log.
+
+Then run:
 
 ```bash
 uv run trail-lm-assist \
