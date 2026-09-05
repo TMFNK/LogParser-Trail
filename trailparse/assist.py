@@ -17,6 +17,12 @@ from trailparse.miner import WILDCARD, merge
 LOW_SIMILARITY = 0.7
 MAX_EXAMPLES = 3
 DEFAULT_MAX_CANDIDATES = 100
+# Auto-apply ceiling: a model accept touching more lines than this is
+# recorded as needs-human and never materialized. Splitting one line
+# out of a large pure cluster (or merging two big ones) rewrites the
+# grouping of every line involved; that blast radius needs a human.
+# Small sudo-fragment merges (a handful of lines) still auto-apply.
+MAX_AUTO_AFFECTED = 10
 _WORD = re.compile(r"[A-Za-z]+")
 _THINK = re.compile(r"<think>.*?</think>", re.I | re.S)
 
@@ -30,6 +36,11 @@ class Candidate:
     templates: tuple[str, ...]
     similarity: float | None
     target_line: int | None
+    # Lines whose grouping would change if this candidate is applied:
+    # the whole cluster for a split, both clusters for a merge.
+    # select_candidates always sets it; the 0 default keeps older
+    # unit-test constructions on the previous accept/reject behavior.
+    affected_lines: int = 0
 
 
 def token_edit_distance(left: list[str], right: list[str]) -> int:
@@ -215,6 +226,7 @@ def select_candidates(
                 templates=(templates[cid],),
                 similarity=rec["similarity"],
                 target_line=target_line,
+                affected_lines=len(members[cid]),
             )
         )
         if len(candidates) > max_candidates:
@@ -239,6 +251,7 @@ def select_candidates(
                 templates=(templates[left_id], templates[right_id]),
                 similarity=None,
                 target_line=None,
+                affected_lines=len(members[left_id]) + len(members[right_id]),
             )
         )
     return candidates
@@ -287,6 +300,13 @@ def decide(candidate: Candidate, proposal: str | None) -> tuple[str, str, str]:
         return "reject", "none", "unparsed model reply"
     if candidate.kind == "low_confidence":
         if proposal == "TWO":
+            if candidate.affected_lines > MAX_AUTO_AFFECTED:
+                return (
+                    "needs-human",
+                    "none",
+                    f"split of {candidate.affected_lines} lines in "
+                    f"{candidate.cluster_ids[0]} held for human review",
+                )
             return "accept", "split", "model said TWO"
         return "reject", "none", "model said SAME; keep miner join"
     if proposal == "SAME":
@@ -294,6 +314,14 @@ def decide(candidate: Candidate, proposal: str | None) -> tuple[str, str, str]:
             candidate.templates[1].split()
         ):
             return "reject", "none", "unequal-length merge is not materialized"
+        if candidate.affected_lines > MAX_AUTO_AFFECTED:
+            clusters = ",".join(candidate.cluster_ids)
+            return (
+                "needs-human",
+                "none",
+                f"merge of {candidate.affected_lines} lines in "
+                f"{clusters} held for human review",
+            )
         return "accept", "merge", "model said SAME"
     return "reject", "none", "model said TWO; keep clusters split"
 
@@ -317,6 +345,7 @@ def review_candidate(
         "cluster_ids": list(candidate.cluster_ids),
         "cited_audit_lines": list(candidate.cited_audit_lines),
         "target_line": candidate.target_line,
+        "affected_lines": candidate.affected_lines,
         "templates": list(candidate.templates),
         "examples": list(candidate.examples),
         "similarity": candidate.similarity,

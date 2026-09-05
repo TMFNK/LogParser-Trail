@@ -99,7 +99,17 @@ committed public sample outputs from a different input unless
 
 ## Local-model assist
 
-Start an OpenAI-compatible server bound to `127.0.0.1`, then run:
+The review loop needs a local OpenAI-compatible server on
+`http://127.0.0.1:8090/v1`. Any server works; the tested one is
+`llama-server` (llama.cpp) with a 2B-class quant:
+
+```bash
+llama-server -m Qwen3.8-2B-Q6_K.gguf --host 127.0.0.1 --port 8090
+```
+
+The default `--model` alias is `qwen3.8-2b-q6k` (Qwen3.8-2B distill,
+Q6_K, about 2 GB of weights). It runs on CPU: 16 SecOps-2k candidates
+take a few minutes after a short model load. Then run:
 
 ```bash
 uv run trail-lm-assist \
@@ -109,13 +119,16 @@ uv run trail-lm-assist \
   --out-csv results/raw/sample_lm.csv
 ```
 
-The default endpoint is `http://127.0.0.1:8090/v1` and the default model
-alias is `qwen3.8-2b-q6k`; override them with `--base-url` and `--model`.
-Only the literal `127.0.0.1` is accepted. The client bypasses environment
-proxies, rejects redirects, and sends requests one at a time. Use `--dry-run`
+The default endpoint is `http://127.0.0.1:8090/v1`; override endpoint
+and model with `--base-url` and `--model`. Only the literal
+`127.0.0.1` is accepted. The client bypasses environment proxies,
+rejects redirects, and sends requests one at a time. Use `--dry-run`
 to inspect candidates without contacting a model or writing outputs. The
-command aborts above 100 candidates unless `--max-candidates` is explicit.
-It refuses to replace an existing `*_lm.csv` unless `--force` is passed.
+command aborts above 100 candidates unless `--max-candidates` is explicit,
+and refuses to replace an existing `*_lm.csv` unless `--force` is passed.
+Accepts touching more than 10 lines are recorded as `needs-human` and
+never materialized; small-fragment merges still auto-apply. Reviews and
+assisted CSVs live under the ignored `results/raw/` directory.
 `scripts/lm_assist.py` remains a source-checkout compatibility wrapper.
 
 ## Metrics

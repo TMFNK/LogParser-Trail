@@ -24,10 +24,14 @@ human or a threshold accepts them. Nothing parses without a trail.
    over an OpenAI-compatible endpoint (`127.0.0.1`, same pattern as
    the Tier A harness server script). Ask one question: same event or
    two? No log leaves the machine.
-4. Append the proposal, cited audit lines, model identity, prompt version,
-   raw response, and accept/reject reason to `*.lm-review.jsonl`.
+4. Append the proposal, cited audit lines, affected-line count, model identity, prompt version,
+   raw response, and accept/reject/needs-human reason to `*.lm-review.jsonl`.
 5. If accepted decisions are applied, write a new assisted CSV. Do not
-   mutate the deterministic CSV or parse audit.
+   mutate the deterministic CSV or parse audit. Accepts touching more
+   than `MAX_AUTO_AFFECTED` lines (10) are recorded as `needs-human`
+   and never materialized: splitting one line out of a large pure
+   cluster, or merging two big clusters, rewrites too much grouping
+   for an unattended model verdict.
 
 The installed `trail-lm-assist` command implements this loop
 (`scripts/lm_assist.py` is a compatibility wrapper). It validates matching

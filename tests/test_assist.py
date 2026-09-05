@@ -83,6 +83,31 @@ def test_committed_sample_candidates_have_three_audit_cited_examples():
         )
 
 
+def test_candidates_carry_affected_line_counts():
+    contents = {1: "event a", 2: "event b", 3: "event c"}
+    records = []
+    rows = []
+    for i in range(1, 13):
+        content = contents.get(i, "event a")
+        decision = "matched" if i == 2 else "new_cluster"
+        records.append(
+            {
+                "line": i,
+                "cluster": "T1",
+                "decision": decision,
+                "similarity": 0.5 if i == 2 else 0.0,
+                "template": "event <*>",
+            }
+        )
+        rows.append(row(i, "T1", "event <*>", content))
+
+    (candidate,) = select_candidates(records, rows)
+
+    assert candidate.kind == "low_confidence"
+    assert candidate.target_line == 2
+    assert candidate.affected_lines == 12
+
+
 def test_candidates_without_three_examples_are_not_sent():
     records = [
         {
@@ -343,6 +368,98 @@ def test_apply_decisions_rejects_unequal_length_merge():
 
     with pytest.raises(ValueError, match="unequal-length"):
         apply_decisions(source, [{"change": "merge", "cluster_ids": ["T1", "T2"]}])
+
+
+def test_big_split_is_held_for_human_review():
+    candidate = Candidate(
+        kind="low_confidence",
+        cluster_ids=("T3",),
+        cited_audit_lines=(18, 3, 21),
+        examples=("target", "peer one", "peer two"),
+        templates=("event <*>",),
+        similarity=0.5,
+        target_line=18,
+        affected_lines=410,
+    )
+    assert decide(candidate, "TWO") == (
+        "needs-human",
+        "none",
+        "split of 410 lines in T3 held for human review",
+    )
+
+
+def test_big_merge_is_held_for_human_review():
+    candidate = Candidate(
+        kind="near_duplicate",
+        cluster_ids=("T7", "T11"),
+        cited_audit_lines=(7, 15, 10),
+        examples=("event a", "event b", "event c"),
+        templates=("event <*>", "event <*>"),
+        similarity=None,
+        target_line=None,
+        affected_lines=160,
+    )
+    assert decide(candidate, "SAME") == (
+        "needs-human",
+        "none",
+        "merge of 160 lines in T7,T11 held for human review",
+    )
+
+
+def test_small_accepts_still_apply():
+    split = Candidate(
+        kind="low_confidence",
+        cluster_ids=("T1",),
+        cited_audit_lines=(2, 1, 3),
+        examples=("target", "peer one", "peer two"),
+        templates=("event <*>",),
+        similarity=0.5,
+        target_line=2,
+        affected_lines=3,
+    )
+    assert decide(split, "TWO") == ("accept", "split", "model said TWO")
+    merge = Candidate(
+        kind="near_duplicate",
+        cluster_ids=("T1", "T2"),
+        cited_audit_lines=(1, 2, 3),
+        examples=("event a", "event b", "event c"),
+        templates=("event <*>", "event <*>"),
+        similarity=None,
+        target_line=None,
+        affected_lines=6,
+    )
+    assert decide(merge, "SAME") == ("accept", "merge", "model said SAME")
+
+
+def test_needs_human_records_are_not_materialized():
+    source = [
+        row(1, "T1", "event <*>", "event a"),
+        row(2, "T1", "event <*>", "event b"),
+        row(3, "T2", "event <*>", "event c"),
+    ]
+    reviews = [
+        {
+            "decision": "needs-human",
+            "change": "none",
+            "target_line": 2,
+            "cluster_ids": ["T1"],
+        },
+        {
+            "decision": "needs-human",
+            "change": "none",
+            "target_line": None,
+            "cluster_ids": ["T1", "T2"],
+        },
+    ]
+
+    assisted = apply_decisions(source, reviews)
+
+    assert [item["EventId"] for item in assisted] == ["T1", "T1", "T2"]
+    assert [item["EventTemplate"] for item in assisted] == [
+        "event <*>",
+        "event <*>",
+        "event <*>",
+    ]
 
 
 def test_apply_decisions_accepts_empty_parse():
