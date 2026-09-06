@@ -15,7 +15,7 @@ from trailparse.lm import PROMPT_VERSION, LocalModelClient
 from trailparse.miner import Cluster, Miner, merge
 
 # Review thresholds: chosen once, not tuned per run. Changing any of them
-# reshapes the candidate set, so the pin test in tests/test_assist.py must
+# reshapes the candidate set, so the pin test in tests/unit/test_assist.py must
 # be updated deliberately alongside results/lm_scores.json.
 # LOW_SIMILARITY: miner joins below 0.7 are worth a second opinion; at or
 # above it the deterministic join stands without review.

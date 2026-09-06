@@ -18,14 +18,25 @@ models, Drain alternative.
 GitHub topics: `log-parsing` `template-mining` `audit-trail` `offline`
 `reproducibility` `small-language-models`
 
+## For business readers (MbitAI solution)
+
+For the business presentation start
+here: [`docs/SOLUTION.md`](docs/SOLUTION.md) (buyers, ROI, engagement
+shapes) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (components and
+data flow). The companion paper is [`trail-techreport.pdf`](trail-techreport.pdf)
+(LaTeX source: [`trail-techreport.tex`](trail-techreport.tex)).
+
 ## Project pipeline
 
-- **Tier A — [LogParser-Harness](https://github.com/TMFNK/LogParser-Harness):**
+- **Tier A: [LogParser-Harness](https://github.com/TMFNK/LogParser-Harness):**
   the reproducible Drain evaluation harness for LogHub-2k and SecOps-2k.
-- **Tier B — [LogParser-Dataset](https://github.com/TMFNK/LogParser-Dataset):**
+- **Tier B: [LogParser-Dataset](https://github.com/TMFNK/LogParser-Dataset):**
   the synthetic SecOps-2k dataset, grouping rules, and pinned Drain baseline.
-- **Tier C — this repository:** the deterministic-first parser, per-decision
+- **Tier C: this repository:** the deterministic-first parser, per-decision
   audit trail, SecOps-2k results, and optional local-model review.
+
+Companion paper: [`trail-techreport.pdf`](trail-techreport.pdf) (LaTeX
+source: [`trail-techreport.tex`](trail-techreport.tex)).
 
 ## One-command run
 
@@ -36,12 +47,12 @@ GitHub topics: `log-parsing` `template-mining` `audit-trail` `offline`
 Needs Python 3.12+ and [uv](https://docs.astral.sh/uv/). It builds the
 60-line sample, parses it, writes the audit trail, scores against
 ground truth, checks `expected/sample_60.json`, writes
-`results/baseline.md`, then runs the test suite. Under a minute. If the
-Tier B checkout (`../LogParser-Dataset`) is present, it also parses
+`results/baseline.md`, then runs the test suite. Note: If the
+Tier B (`../LogParser-Dataset`) is present, it also parses
 SecOps-2k, appends the tight and loose rows to `results/baseline.md`,
 and runs the `scripts/verify_secops.py` gate.
 
-## What is pinned
+## Configuration
 
 | Item                                                                  | Where                                                      |
 | --------------------------------------------------------------------- | ---------------------------------------------------------- |
@@ -61,6 +72,7 @@ GA/PA/FGA/FTA and template count.
 ```text
 LogParser-Trail/
 ├── README.md CITATION.cff LICENSE NOTICE
+├── trail-techreport.pdf    # companion paper (source: trail-techreport.tex)
 ├── configs/miner.yaml      # pinned: st 0.5, 2 anchor tokens, slack 1
 ├── trailparse/
 │   ├── miner.py            # deterministic core (original code, no Drain copy)
@@ -79,11 +91,16 @@ LogParser-Trail/
 │   ├── verify_secops.py    # SecOps-2k tight FGA/FTA gate
 │   └── lm_assist.py        # local review CLI; deterministic inputs stay immutable
 ├── expected/sample_60.json # CI golden for the 60-line sample
-├── docs/DESIGN.md          # algorithm, audit schema, known limits
-├── docs/PHASE2-LM.md       # local-model review contract
+├── docs/
+│   ├── SOLUTION.md         # MbitAI business solution brief
+│   ├── ARCHITECTURE.md     # components, execution flow, data flow
+│   ├── DESIGN.md           # algorithm, audit schema, known limits
+│   └── PHASE2-LM.md        # local-model review contract
 ├── results/                # committed sample run (parsed CSV, audit, baseline.md)
 │   └── raw/                # ignored scored JSON, SecOps outputs, LM reviews
 └── tests/
+    ├── unit/               # miner, audit, IO, metrics, assist, client, guards
+    └── integration/        # sample fixture, LM scores, end-to-end CLI
 ```
 
 ## Audit trail
@@ -119,18 +136,18 @@ Measured cost (Apple M2, 8 GB RAM, CPU via homebrew `llama-server`,
 weights `empero-ai/Qwen3.8-2B-Distill-GGUF` `Qwen3.8-2B-Q6_K.gguf`,
 1,606,323,584 bytes, Apache-2.0):
 
-| Step | Wall | Memory |
-|---|---|---|
-| Model load (server start to first request) | ~40 s | 3.7 GB resident |
-| 16 SecOps-2k candidates, prompt `trail-lm-v2` | 463 s (~29 s each) | same process |
-| Verdicts | 13 reject, 3 `needs-human`, 0 auto-apply | — |
+| Step                                          | Wall                                     | Memory          |
+| --------------------------------------------- | ---------------------------------------- | --------------- |
+| Model load (server start to first request)    | ~40 s                                    | 3.7 GB resident |
+| 16 SecOps-2k candidates, prompt `trail-lm-v2` | 463 s (~29 s each)                       | same process    |
+| Verdicts                                      | 13 reject, 3 `needs-human`, 0 auto-apply | NA              |
 
 The rerun reproduces the committed v2 review exactly (same 3 held:
 T18 split, T7+T11 and T20+T21 merges), so the assisted CSV again
 equals the deterministic parse. Review log:
 `results/raw/secops-cost.lm-review.jsonl` (ignored, same schema).
 
-A small local model is enough here because the job is small. The
+A small local model is enough here because the job is small; The
 deterministic miner does the parsing; the model only answers one
 question per candidate, SAME or TWO, with the audit lines cited. The
 candidate set numbers in the dozens, not thousands, so a 2B quant on
@@ -187,10 +204,10 @@ Independent Apache-2.0 code (`trailparse/metrics.py`, shared with
 TMFNK/LogParser-Harness and TMFNK/LogParser-Dataset). We do not copy Loghub-2.0
 `benchmark/evaluation/` (GPL-3). See `docs/DESIGN.md`.
 
-- **GA** — share of messages whose parsed group equals the ground-truth group
-- **PA** — share of messages whose template tokens match exactly
-- **FGA** — F1 of grouping accuracy at template level (rare and common templates equal)
-- **FTA** — F1 of exact template identification (one ground-truth template
+- **GA**: share of messages whose parsed group equals the ground-truth group
+- **PA**: share of messages whose template tokens match exactly
+- **FGA**: F1 of grouping accuracy at template level (rare and common templates equal)
+- **FTA**: F1 of exact template identification (one ground-truth template
   per parsed template, with matching tokens)
 
 ## Manual steps
@@ -242,7 +259,7 @@ Drain rows are the pinned Tier B baseline
 (`../LogParser-Dataset/expected/drain_secops_2k.json`, Drain st=0.5
 depth=4): 70 parsed templates against 25 tight truth templates, versus
 Trail's 26. The `verify_secops.py` gate (FGA ≥ 0.2947, FTA ≥ 0.2526) is
-that Drain score — Trail clears it at 0.8627 / 0.8627.
+that Drain score. Trail scores are at 0.8627 / 0.8627.
 
 Source: `results/raw/sample_scores.json`,
 `results/raw/trail_secops_tight.json`.
@@ -311,15 +328,15 @@ Need this applied to your own log pipelines? [MbitAI](https://www.mbitai.com)
 
 If you use Trail or publish numbers from it, please cite the archived release:
 
-> MbitAI. (2026). *LogParser-Trail* (v0.2.1). Zenodo.
-> https://doi.org/10.5281/zenodo.22341504
+> MbitAI. (2026). _LogParser-Trail_ (v0.2.1). Zenodo.
+> [https://doi.org/10.5281/zenodo.22341504](https://doi.org/10.5281/zenodo.22341504)
 
-| | |
-| --- | --- |
-| This version | [10.5281/zenodo.22341504](https://doi.org/10.5281/zenodo.22341504) |
-| All versions (concept DOI) | [10.5281/zenodo.22341503](https://doi.org/10.5281/zenodo.22341503) |
-| GitHub tag | [`v0.2.1`](https://github.com/TMFNK/LogParser-Trail/releases/tag/v0.2.1) |
-| Record | https://zenodo.org/records/22341504 |
+|                            |                                                                            |
+| -------------------------- | -------------------------------------------------------------------------- |
+| This version               | [10.5281/zenodo.22341504](https://doi.org/10.5281/zenodo.22341504)         |
+| All versions (concept DOI) | [10.5281/zenodo.22341503](https://doi.org/10.5281/zenodo.22341503)         |
+| GitHub tag                 | [`v0.2.1`](https://github.com/TMFNK/LogParser-Trail/releases/tag/v0.2.1)   |
+| Record                     | [https://zenodo.org/records/22341504](https://zenodo.org/records/22341504) |
 
 Also see [`CITATION.cff`](CITATION.cff).
 

@@ -5,14 +5,14 @@
 Offline: reads only the committed results/lm_scores.json, no model server.
 This guards the committed data; the code mechanism behind it
 (MAX_AUTO_AFFECTED hold, needs-human not materialized) is guarded by
-tests/test_assist.py.
+tests/unit/test_assist.py.
 """
 
 import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 SCORES = ROOT / "results" / "lm_scores.json"
