@@ -38,6 +38,19 @@ data flow). The companion paper is [`trail-techreport.pdf`](trail-techreport.pdf
 Companion paper: [`trail-techreport.pdf`](trail-techreport.pdf) (LaTeX
 source: [`trail-techreport.tex`](trail-techreport.tex)).
 
+## Hugging Face
+
+Trail's SecOps-2k parse and audit trail mirrored as
+[`mbitai/secops-2k-trail-baseline`](https://huggingface.co/datasets/mbitai/secops-2k-trail-baseline)
+(`secops` 2,000 rows + `sample` 60 rows). Input logs:
+[`mbitai/secops-2k`](https://huggingface.co/datasets/mbitai/secops-2k).
+
+```python
+from datasets import load_dataset
+secops = load_dataset("mbitai/secops-2k-trail-baseline", "secops")
+sample = load_dataset("mbitai/secops-2k-trail-baseline", "sample")
+```
+
 ## One-command run
 
 ```bash
