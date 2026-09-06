@@ -1,6 +1,6 @@
 # LogParser-Trail
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22341504.svg)](https://doi.org/10.5281/zenodo.22341504)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22484287.svg)](https://doi.org/10.5281/zenodo.22484287)
 
 Trail is a deterministic-first log template miner. Each parsed line gets
 a template and a receipt: one audit record per decision, so any
@@ -329,14 +329,14 @@ Need this applied to your own log pipelines? [MbitAI](https://www.mbitai.com)
 If you use Trail or publish numbers from it, please cite the archived release:
 
 > MbitAI. (2026). _LogParser-Trail_ (v0.2.2). Zenodo.
-> [https://doi.org/10.5281/zenodo.22341504](https://doi.org/10.5281/zenodo.22341504)
+> [https://doi.org/10.5281/zenodo.22484287](https://doi.org/10.5281/zenodo.22484287)
 
 |                            |                                                                            |
 | -------------------------- | -------------------------------------------------------------------------- |
-| This version               | [10.5281/zenodo.22341504](https://doi.org/10.5281/zenodo.22341504)         |
+| This version               | [10.5281/zenodo.22484287](https://doi.org/10.5281/zenodo.22484287)         |
 | All versions (concept DOI) | [10.5281/zenodo.22341503](https://doi.org/10.5281/zenodo.22341503)         |
 | GitHub tag                 | [`v0.2.2`](https://github.com/TMFNK/LogParser-Trail/releases/tag/v0.2.2)   |
-| Record                     | [https://zenodo.org/records/22341504](https://zenodo.org/records/22341504) |
+| Record                     | [https://zenodo.org/records/22484287](https://zenodo.org/records/22484287) |
 
 Also see [`CITATION.cff`](CITATION.cff).
 
@@ -348,8 +348,8 @@ Also see [`CITATION.cff`](CITATION.cff).
   year         = 2026,
   publisher    = {Zenodo},
   version      = {v0.2.2},
-  doi          = {10.5281/zenodo.22341504},
-  url          = {https://doi.org/10.5281/zenodo.22341504},
+  doi          = {10.5281/zenodo.22484287},
+  url          = {https://doi.org/10.5281/zenodo.22484287},
 }
 ```
 
