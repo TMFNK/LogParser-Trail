@@ -353,14 +353,20 @@ Also see [`CITATION.cff`](CITATION.cff).
 }
 ```
 
-## Must-cite (LogHub papers)
+## Must-cite
 
-Also cite the LogHub papers that defined the format and metrics:
+Also cite the papers this work builds on and measures against:
 
+- Pinjia He et al., "Drain: An Online Log Parsing Approach with Fixed Depth
+  Tree." ICWS, 2017. The pinned baseline: the `verify_secops.py` gate is
+  Drain's SecOps-2k score.
+  [PDF](http://jiemingzhu.github.io/pub/pjhe_icws2017.pdf)
 - Zhihan Jiang et al., "A Large-scale Evaluation for Log Parsing Techniques:
-  How Far are We?" ISSTA, 2024. [arXiv:2308.10828](https://arxiv.org/abs/2308.10828)
+  How Far are We?" ISSTA, 2024. Defines the GA/PA/FGA/FTA metrics.
+  [arXiv:2308.10828](https://arxiv.org/abs/2308.10828)
 - Jieming Zhu et al., "LogHub: A Large Collection of System Log Datasets for
-  AI-driven Log Analytics." ISSRE, 2023. [arXiv:2008.06448](https://arxiv.org/abs/2008.06448)
+  AI-driven Log Analytics." ISSRE, 2023. Defines the log format.
+  [arXiv:2008.06448](https://arxiv.org/abs/2008.06448)
 
 ## Limitations
 
