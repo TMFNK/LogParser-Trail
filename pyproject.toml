@@ -1,6 +1,6 @@
 [project]
 name = "LogParser-Trail"
-version = "0.1.0"
+version = "0.2.2"
 description = "Trail: deterministic-first log template miner with per-decision audit trail"
 readme = "README.md"
 license = { text = "Apache-2.0" }
